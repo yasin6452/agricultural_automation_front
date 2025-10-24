@@ -71,3 +71,4 @@ export default defineConfig([
   },
 ])
 ```
+# agricultural_automation_front
