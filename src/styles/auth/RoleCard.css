@@ -1,0 +1,36 @@
+.role-card {
+    border-radius: 16px !important;
+    text-align: center;
+    background: #ffffff !important;
+    border: 1px solid #e5e8e7 !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    padding: 24px;
+    min-height: 240px;
+}
+
+.role-card:hover {
+    box-shadow: 0 10px 24px rgba(50, 142, 110, 0.25);
+    transform: translateY(-4px);
+    border-color: #6fcf97 !important;
+}
+
+.role-icon {
+    font-size: 48px;
+    color: #328e6e;
+    margin-bottom: 16px;
+}
+
+.role-title {
+    color: #328e6e;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.role-desc {
+    color: #444c47;
+    font-size: 14px;
+    line-height: 1.6;
+}
