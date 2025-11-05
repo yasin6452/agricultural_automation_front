@@ -1,6 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
-// تایپ کاربر
 interface User {
     phone: string;
     firstName?: string;
@@ -12,7 +11,6 @@ interface User {
     isRegistered: boolean;
 }
 
-// تایپ Context
 interface AuthContextType {
     user: User | null;
     isAuthenticated: boolean;
@@ -20,15 +18,12 @@ interface AuthContextType {
     loading: boolean;
 }
 
-// ساخت Context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Provider Component
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // چک کردن لاگین بودن کاربر هنگام لود صفحه
     useEffect(() => {
         const token = localStorage.getItem('token');
         const savedUser = localStorage.getItem('user');
@@ -40,7 +35,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setLoading(false);
     }, []);
 
-    // تابع خروج
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -48,27 +42,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(null);
     };
 
-    const value = {
-        user,
-        isAuthenticated: !!user,
-        logout,
-        loading
-    };
-
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={{
+            user,
+            isAuthenticated: !!user,
+            logout,
+            loading
+        }}>
             {!loading && children}
         </AuthContext.Provider>
     );
 };
 
-// Custom Hook برای استفاده از Context
 export const useAuth = () => {
     const context = useContext(AuthContext);
-
-    if (context === undefined) {
-        throw new Error('useAuth must be used within AuthProvider');
-    }
-
+    if (!context) throw new Error('useAuth must be used within an AuthProvider');
     return context;
 };

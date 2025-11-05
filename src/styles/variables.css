@@ -1,0 +1,189 @@
+/* ==========================================
+   🎨 Theme Variables - سیستم اتوماسیون کشاورزی
+   ========================================== */
+
+:root {
+    /* ============ Colors - رنگ‌ها ============ */
+
+    /* Primary Colors - رنگ‌های اصلی */
+    --primary: #328E6E;
+    --primary-light: #3FA681;
+    --primary-lighter: #5BB893;
+    --primary-dark: #2A7A5E;
+    --primary-darker: #226650;
+
+    /* Secondary Colors - رنگ‌های ثانویه */
+    --secondary: #BFA980;
+    --secondary-light: #CCBB99;
+    --secondary-dark: #A89268;
+
+    /* Accent Colors - رنگ تاکیدی */
+    --accent: #6FCF97;
+    --accent-light: #8DDAAB;
+    --accent-dark: #5ABF83;
+
+    /* Text Colors - رنگ متن‌ها */
+    --text-primary: #444C47;
+    --text-secondary: #6B746E;
+    --text-tertiary: #8F9893;
+    --text-light: #B4BBB7;
+    --text-white: #FFFFFF;
+
+    /* Background Colors - رنگ پس‌زمینه */
+    --bg-primary: #F7FAF9;
+    --bg-secondary: #FFFFFF;
+    --bg-tertiary: #E8F0ED;
+    --bg-dark: #2A3530;
+
+    /* Status Colors - رنگ وضعیت‌ها */
+    --success: #6FCF97;
+    --success-light: #E8F8F0;
+    --warning: #BFA980;
+    --warning-light: #F5F1E9;
+    --error: #E74C3C;
+    --error-light: #FADBD8;
+    --info: #3498DB;
+    --info-light: #D6EAF8;
+
+    /* Border Colors - رنگ حاشیه‌ها */
+    --border-light: #E0E7E4;
+    --border-medium: #C5D0CB;
+    --border-dark: #A5B3AC;
+
+    /* Shadow Colors - رنگ سایه‌ها */
+    --shadow-sm: rgba(50, 142, 110, 0.08);
+    --shadow-md: rgba(50, 142, 110, 0.12);
+    --shadow-lg: rgba(50, 142, 110, 0.16);
+    --shadow-xl: rgba(50, 142, 110, 0.24);
+
+
+    /* ============ Spacing - فاصله‌گذاری ============ */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+    --spacing-3xl: 64px;
+
+
+    /* ============ Typography - تایپوگرافی ============ */
+    --font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+    /* Font Sizes */
+    --font-xs: 12px;
+    --font-sm: 14px;
+    --font-base: 16px;
+    --font-lg: 18px;
+    --font-xl: 20px;
+    --font-2xl: 24px;
+    --font-3xl: 30px;
+    --font-4xl: 36px;
+    --font-5xl: 48px;
+
+    /* Font Weights */
+    --font-light: 300;
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+
+    /* Line Heights */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.8;
+
+
+    /* ============ Border Radius - گردی گوشه‌ها ============ */
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+
+
+    /* ============ Shadows - سایه‌ها ============ */
+    --shadow-xs: 0 1px 2px var(--shadow-sm);
+    --shadow-sm: 0 2px 4px var(--shadow-sm);
+    --shadow-md: 0 4px 8px var(--shadow-md);
+    --shadow-lg: 0 8px 16px var(--shadow-lg);
+    --shadow-xl: 0 12px 24px var(--shadow-xl);
+    --shadow-2xl: 0 20px 40px var(--shadow-xl);
+
+    /* Special Shadows */
+    --shadow-primary: 0 4px 16px rgba(50, 142, 110, 0.3);
+    --shadow-accent: 0 4px 16px rgba(111, 207, 151, 0.3);
+
+
+    /* ============ Transitions - انیمیشن‌ها ============ */
+    --transition-fast: 0.15s ease-in-out;
+    --transition-base: 0.3s ease-in-out;
+    --transition-slow: 0.5s ease-in-out;
+
+    /* Easing Functions */
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+
+    /* ============ Z-Index - لایه‌بندی ============ */
+    --z-dropdown: 1000;
+    --z-sticky: 1020;
+    --z-fixed: 1030;
+    --z-modal-backdrop: 1040;
+    --z-modal: 1050;
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+
+
+    /* ============ Breakpoints - نقاط شکست ============ */
+    --breakpoint-xs: 480px;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-2xl: 1400px;
+
+
+    /* ============ Container - محدوده محتوا ============ */
+    --container-sm: 540px;
+    --container-md: 720px;
+    --container-lg: 960px;
+    --container-xl: 1140px;
+    --container-2xl: 1320px;
+
+
+    /* ============ Card Sizes - اندازه کارت‌ها ============ */
+    --card-width-sm: 400px;
+    --card-width-md: 500px;
+    --card-width-lg: 700px;
+    --card-width-xl: 900px;
+}
+
+
+/* ==========================================
+   🌙 Dark Mode Support (اختیاری)
+   ========================================== */
+[data-theme="dark"] {
+    --text-primary: #E8F0ED;
+    --text-secondary: #B4BBB7;
+    --bg-primary: #1A2420;
+    --bg-secondary: #2A3530;
+    --bg-tertiary: #3A4540;
+    --border-light: #4A5550;
+}
+
+
+/* ==========================================
+   📱 Responsive Font Sizes
+   ========================================== */
+@media (max-width: 768px) {
+    :root {
+        --font-3xl: 24px;
+        --font-4xl: 28px;
+        --font-5xl: 36px;
+    }
+}

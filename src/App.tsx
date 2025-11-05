@@ -7,6 +7,7 @@ import { PhoneLogin } from './pages/auth/PhoneLogin';
 import { VerifyOTP } from './pages/auth/VerifyOTP';
 import { CompleteProfile } from './pages/auth/CompleteProfile';
 import { Dashboard } from './pages/Dashboard';
+import { SelectRole} from './pages/auth/SelectRole'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/login" element={<PhoneLogin />} />
             <Route path="/verify-otp" element={<VerifyOTP />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
+            <Route path="/select-role" element={<SelectRole />} />
 
             {/* مسیرهای محافظت شده */}
             <Route

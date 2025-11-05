@@ -2,32 +2,28 @@ import { useState } from 'react';
 import { Form, Input, Button, Card, Typography, message } from 'antd';
 import { PhoneOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import './Auth.css';
+import '@/styles/auth/Auth.css'; // ✅ مسیر جدید برای استایل
+import { useAuth } from '@/context/AuthContext'; // ✅ اتصال به context
 
 const { Title, Text } = Typography;
 
 export const PhoneLogin = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { isAuthenticated } = useAuth(); // 👈 برای بررسی لاگین بودن
 
     const onFinish = async (values: { phone: string }) => {
         setLoading(true);
-
         try {
-            // TODO: ارسال درخواست به API برای ارسال کد
+            // 🚀 در آینده: درخواست واقعی به API ارسال کن
             console.log('Phone:', values.phone);
 
             // شبیه‌سازی API
             await new Promise(resolve => setTimeout(resolve, 1000));
 
-            // ذخیره شماره در localStorage (موقتی)
             localStorage.setItem('tempPhone', values.phone);
-
             message.success('کد تایید به شماره شما ارسال شد');
-
-            // انتقال به صفحه وارد کردن کد
             navigate('/verify-otp');
-
         } catch (error) {
             message.error('خطا در ارسال کد! لطفا دوباره تلاش کنید.');
             console.error('Send OTP error:', error);
@@ -95,7 +91,7 @@ export const PhoneLogin = () => {
 
             <div className="auth-logo-section">
                 <img
-                    src="/public/logo.png"
+                    src="/logo.png" // ✅ نیازی به /public/ نیست
                     alt="Logo"
                     className="auth-logo"
                 />

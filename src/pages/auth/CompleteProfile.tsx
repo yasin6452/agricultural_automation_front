@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Form, Input, Button, Card, Typography, message, Select, Row, Col } from 'antd';
-import { UserOutlined, IdcardOutlined, CalendarOutlined } from '@ant-design/icons';
+import { UserOutlined, IdcardOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import persian_fa from 'react-date-object/locales/persian_fa';
-import './Auth.css';
+import "@/styles/auth/Auth.css";
 import 'react-multi-date-picker/styles/colors/red.css';
 
 const { Title, Text } = Typography;

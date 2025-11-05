@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Form, Button, Card, Typography, message, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import OtpInput from 'react-otp-input';
-import './Auth.css';
+import "@/styles/auth/Auth.css";
 
 const { Title, Text, Link } = Typography;
 
