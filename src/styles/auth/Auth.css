@@ -1,216 +1,165 @@
-/* استفاده از متغیرها */
 .auth-container {
-
-  min-height: 100vh;
   display: flex;
-  align-items: start;
-  justify-content: start;
-  
-  /* بک‌گراند - می‌تونی توی variables.css تغییر بدی */
-  background: #F7FAF9;
-  padding: var(--spacing-md);
-  
-  /* انیمیشن fade-in */
-  animation: fadeIn var(--transition-normal) ease-in;
+  flex-direction: column;
+  /* لوگو بالا، فرم پایین */
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #f7faf9;
+  padding: 40px 20px;
+  animation: fadeIn 0.6s ease-in;
+  gap: 30px;
 }
 
+/* لوگوی بالای فرم */
+.auth-logo-top {
+  width: 140px;
+  height: auto;
+  object-fit: contain;
+  animation: fadeIn 1s ease-in;
+  margin-bottom: 10px;
+}
+
+/* کارت فرم ورود */
+.auth-card {
+  width: 40%;
+  max-width: 90%;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(50, 142, 110, 0.2);
+  padding: 40px 32px;
+  animation: slideUp 0.7s ease-out;
+}
+
+/* هدر کارت */
+.auth-header {
+  text-align: center;
+  margin-bottom: 32px;
+  border-bottom: 2px solid #eaeaea;
+  padding-bottom: 16px;
+}
+
+.auth-header h2 {
+  color: #328e6e;
+  font-weight: 700;
+  font-size: 26px;
+}
+
+/* دکمه */
+.ant-btn-primary {
+  background-color: #328e6e;
+  border-color: #328e6e;
+  border-radius: 12px;
+  height: 48px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.ant-btn-primary:hover {
+  background-color: #246b54 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(50, 142, 110, 0.25);
+}
+
+/* فوتر */
+.auth-footer {
+  text-align: center;
+  margin-top: 16px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 12px;
+}
+
+.auth-footer a {
+  color: #328e6e;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.auth-footer a:hover {
+  color: #246b54;
+}
+
+/* انیمیشن‌ها */
 @keyframes fadeIn {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
 
-.auth-card {
-  min-height: 100vh;
-  width: 40%;
-  border-radius: 0%;
-  max-width: var(--card-width-md); /* تغییر اندازه کارت */
-  box-shadow: var(--shadow-lg);
-
-  box-shadow: 0 4px 8px #328E6E;
-  /* انیمیشن ظاهر شدن */
-  animation: slideUp var(--transition-normal) ease-out;
-}
-
 @keyframes slideUp {
   from {
-    transform: translateY(30px);
+    transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
   }
 }
 
-/* هدر کارت */
-.auth-header {
-  text-align: center;
-  margin-bottom: var(--spacing-lg);
-  padding-bottom: var(--spacing-lg);
-  border-bottom: 2px  solid var(--border-color);
-}
-
-.auth-header .ant-typography {
-  margin-bottom: var(--spacing-xs);
-  color: var(--text-primary);
-}
-
-.auth-header h2 {
-  font-size: var(--font-xl);
-  font-weight: bold;
-}
-
-/* فوتر کارت */
-.auth-footer {
-  text-align: center;
-  margin-top: var(--spacing-md);
-  padding-top: var(--spacing-md);
-  border-top: 1px solid var(--border-color);
-}
-
-.auth-footer a {
-  color: var(--primary-color);
-  font-weight: 500;
-  transition: all var(--transition-fast);
-}
-
-.auth-footer a:hover {
-  color: var(--primary-hover);
-  text-decoration: underline;
-}
-
-/* استایل دکمه‌ها */
-.ant-btn-primary {
-  height: 48px !important;
-  font-size: var(--font-lg);
-  border-radius: 12px;
-  transition: all var(--transition-normal);
-}
-
-.ant-btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-/* استایل Input ها */
-.ant-input,
-.ant-input-password,
-.ant-picker {
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
-}
-
-.ant-input:focus,
-.ant-input-password:focus,
-.ant-picker:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(213, 95, 27, 0.2);
-}
-
-/* Responsive - موبایل */
+/* موبایل */
 @media (max-width: 576px) {
-  .auth-container {
-    padding: var(--spacing-sm);
-  }
-  
   .auth-card {
-    box-shadow: none;
-    border-radius: 0;
+    padding: 24px 20px;
   }
-  
-  .auth-header h2 {
-    font-size: var(--font-xl);
-  }
-}
 
-/* Responsive - تبلت */
-@media (min-width: 577px) and (max-width: 768px) {
-  .auth-card {
-    max-width: var(--card-width-sm);
+  .auth-logo-top {
+    width: 100px;
   }
 }
 
-/* حالت Large Card (برای CompleteProfile) */
-.auth-card.large {
-  max-width: var(--card-width-lg);
+/* 🎨 دکمه ارسال کد تأیید */
+.auth-submit-btn {
+  position: relative;
+  background: linear-gradient(135deg, #328E6E 0%, #6FCF97 100%);
+  border: none;
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 16px;
+  border-radius: 12px;
+  height: 50px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 6px 16px rgba(50, 142, 110, 0.25);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-/* Loading Overlay */
-.loading-overlay {
+/* افکت نور از چپ به راست هنگام hover */
+.auth-submit-btn::before {
+  content: "";
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-lg);
-  z-index: 10;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
+  transition: all 0.4s ease;
 }
 
-/* استایل DatePicker شمسی */
-.custom-date-input {
-  width: 100%;
-  height: 48px;
-  padding: 4px 11px;
-  font-size: 16px;
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  transition: all 0.3s;
-  text-align: right;
-  direction: rtl;
+.auth-submit-btn:hover::before {
+  left: 125%;
 }
 
-.custom-date-input:hover {
-  border-color: var(--primary-hover);
+.auth-submit-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(50, 142, 110, 0.35);
+  background: linear-gradient(135deg, #2e7c61 0%, #5dbb85 100%);
 }
 
-.custom-date-input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(15, 185, 26, 0.2);
-  outline: none;
+.auth-submit-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 10px rgba(50, 142, 110, 0.25);
 }
 
-/* تنظیم فاصله Row و Col */
-.ant-row {
-  margin-bottom: 0;
-}
-
-.ant-col {
-  margin-bottom: 0;
-}
-
-/* Responsive: موبایل - فیلدها زیر هم */
-@media (max-width: 576px) {
-  .ant-col {
-    margin-bottom: 8px;
-  }
-}
-
-.auth-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 60px;
-  /* فاصله بین لوگو و فرم */
-}
-
-.auth-logo-section {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.auth-logo {
-  width: 60%;
-  max-width: 400px;
-  height: auto;
-  animation: fadeIn 1s ease-in;
+/* لودینگ (spin) داخل دکمه هماهنگ با رنگ برند */
+.auth-submit-btn.ant-btn-loading::after {
+  border-top-color: #fff !important;
 }

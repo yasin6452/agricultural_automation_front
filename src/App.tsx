@@ -8,6 +8,9 @@ import { VerifyOTP } from './pages/auth/VerifyOTP';
 import { CompleteProfile } from './pages/auth/CompleteProfile';
 import { Dashboard } from './pages/Dashboard';
 import { SelectRole} from './pages/auth/SelectRole'
+import { CompleteFarmerForm } from './pages/farmer/CompleteFarmerProfile';
+// معمولا در main.tsx یا App.tsx
+import 'leaflet/dist/leaflet.css';
 
 function App() {
   return (
@@ -30,6 +33,8 @@ function App() {
             <Route path="/verify-otp" element={<VerifyOTP />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/select-role" element={<SelectRole />} />
+            <Route path="/complete-info/farmer" element={<CompleteFarmerForm />} />
+
 
             {/* مسیرهای محافظت شده */}
             <Route

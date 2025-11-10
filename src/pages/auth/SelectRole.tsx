@@ -73,14 +73,6 @@ export const SelectRole: React.FC = () => {
                         بازگشت
                     </Button>
 
-                    <Button
-                        type="primary"
-                        size="large"
-                        className="continue-button"
-                        onClick={() => navigate("/home")}
-                    >
-                        ادامه بدون انتخاب
-                    </Button>
                 </div>
             </div>
         </div>
