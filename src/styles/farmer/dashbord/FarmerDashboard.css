@@ -1,0 +1,17 @@
+/* فایل src/styles/farmer/Dashboard.css */
+
+.ant-layout-sider {
+    background: #328E6E !important;
+}
+
+.ant-layout-sider .ant-menu-item-selected {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.ant-menu-item:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.logo {
+    font-family: IRANSans, Tahoma, Arial;
+}

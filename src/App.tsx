@@ -1,15 +1,21 @@
+// src/App.tsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import faIR from 'antd/locale/fa_IR';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './routes/ProtectedRoute';
+
+// صفحات عمومی
 import { PhoneLogin } from './pages/auth/PhoneLogin';
 import { VerifyOTP } from './pages/auth/VerifyOTP';
 import { CompleteProfile } from './pages/auth/CompleteProfile';
-import { Dashboard } from './pages/Dashboard';
-import { SelectRole} from './pages/auth/SelectRole'
+import { SelectRole } from './pages/auth/SelectRole';
 import { CompleteFarmerForm } from './pages/farmer/CompleteFarmerProfile';
-// معمولا در main.tsx یا App.tsx
+
+// داشبورد کشاورز
+import { FarmerDashboardLayout } from './pages/farmer/dashbord/FarmerDashboardLayout';
+
+// استایل مپ
 import 'leaflet/dist/leaflet.css';
 
 function App() {
@@ -19,7 +25,7 @@ function App() {
       direction="rtl"
       theme={{
         token: {
-          colorPrimary: '#328E6E',
+          colorPrimary: '#328E6E', // رنگ اصلی پروژه
           borderRadius: 8,
           fontFamily: 'IRANSans, Tahoma, Arial',
         },
@@ -33,33 +39,38 @@ function App() {
             <Route path="/verify-otp" element={<VerifyOTP />} />
             <Route path="/complete-profile" element={<CompleteProfile />} />
             <Route path="/select-role" element={<SelectRole />} />
-            <Route path="/complete-info/farmer" element={<CompleteFarmerForm />} />
+            <Route path="/complete-profile/farmer" element={<CompleteFarmerForm />} />
 
-
-            {/* مسیرهای محافظت شده */}
+            {/* مسیرهای محافظت‌شده کشاورز */}
             <Route
-              path="/dashboard"
+              path="/farmer"
               element={
                 <ProtectedRoute>
-                  <Dashboard />
+                  <FarmerDashboardLayout />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route path="" element={<Navigate to="dashboard" replace />} />
+            </Route>
 
-            {/* Redirect از صفحه اصلی */}
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            {/* Redirect پیش‌فرض */}
+            <Route path="/" element={<Navigate to="/farmer/dashboard" replace />} />
 
             {/* صفحه 404 */}
             <Route
               path="*"
               element={
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100vh',
-                  fontSize: '24px'
-                }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '100vh',
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    color: '#555',
+                  }}
+                >
                   صفحه پیدا نشد!
                 </div>
               }
