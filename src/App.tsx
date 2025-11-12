@@ -15,6 +15,16 @@ import { CompleteFarmerForm } from './pages/farmer/CompleteFarmerProfile';
 // داشبورد کشاورز
 import { FarmerDashboardLayout } from './pages/farmer/dashbord/FarmerDashboardLayout';
 
+//import { Overview } from "./pages/farmer/dashbord/Consultation";
+//import { MyProducts } from "./pages/farmer/dashbord/LabTests";
+//import { MarketRates } from "./pages/farmer/dashbord/MarketRates";
+//import { MyLands } from "./pages/farmer/dashbord/Messages";
+//import { Consultation } from "./pages/farmer/dashbord/MyLands";
+//import { LabTests } from "./pages/farmer/dashbord/MyProducts";
+//import { Messages } from "./pages/farmer/dashbord/Overview";
+//import { Settings } from "./pages/farmer/dashbord/Settings";
+
+
 // استایل مپ
 import 'leaflet/dist/leaflet.css';
 
@@ -42,17 +52,24 @@ function App() {
             <Route path="/complete-profile/farmer" element={<CompleteFarmerForm />} />
 
             {/* مسیرهای محافظت‌شده کشاورز */}
-            <Route
-              path="/farmer"
-              element={
-                <ProtectedRoute>
-                  <FarmerDashboardLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="" element={<Navigate to="dashboard" replace />} />
-            </Route>
-
+{/*             <Route
+                path="/farmer/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <FarmerDashboardLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route index element={<Overview />} />
+                <Route path="products" element={<MyProducts />} />
+                <Route path="rates" element={<MarketRates />} />
+                <Route path="lands" element={<MyLands />} />
+                <Route path="consultation" element={<Consultation />} />
+                <Route path="lab-tests" element={<LabTests />} />
+                <Route path="messages" element={<Messages />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
+          */}
             {/* Redirect پیش‌فرض */}
             <Route path="/" element={<Navigate to="/farmer/dashboard" replace />} />
 
