@@ -14,15 +14,14 @@ import { CompleteFarmerForm } from './pages/farmer/CompleteFarmerProfile';
 
 // داشبورد کشاورز
 import { FarmerDashboardLayout } from './pages/farmer/dashbord/FarmerDashboardLayout';
-
-//import { Overview } from "./pages/farmer/dashbord/Consultation";
-//import { MyProducts } from "./pages/farmer/dashbord/LabTests";
-//import { MarketRates } from "./pages/farmer/dashbord/MarketRates";
-//import { MyLands } from "./pages/farmer/dashbord/Messages";
-//import { Consultation } from "./pages/farmer/dashbord/MyLands";
-//import { LabTests } from "./pages/farmer/dashbord/MyProducts";
-//import { Messages } from "./pages/farmer/dashbord/Overview";
-//import { Settings } from "./pages/farmer/dashbord/Settings";
+import  Overview  from "./pages/farmer/dashbord/Overview";
+import { MyProducts } from "./pages/farmer/dashbord/MyProducts";
+import { MarketRates } from "./pages/farmer/dashbord/MarketRates";
+import { MyLands } from "./pages/farmer/dashbord/MyLands";
+import { Consultation } from "./pages/farmer/dashbord/Consultation";
+import { LabTests } from "./pages/farmer/dashbord/LabTests";
+import { Messages } from "./pages/farmer/dashbord/Messages";
+import { Settings } from "./pages/farmer/dashbord/Settings";
 
 
 // استایل مپ
@@ -52,7 +51,7 @@ function App() {
             <Route path="/complete-profile/farmer" element={<CompleteFarmerForm />} />
 
             {/* مسیرهای محافظت‌شده کشاورز */}
-{/*             <Route
+              <Route
                 path="/farmer/dashboard"
                 element={
                   <ProtectedRoute>
@@ -68,8 +67,9 @@ function App() {
                 <Route path="lab-tests" element={<LabTests />} />
                 <Route path="messages" element={<Messages />} />
                 <Route path="settings" element={<Settings />} />
+
               </Route>
-          */}
+            
             {/* Redirect پیش‌فرض */}
             <Route path="/" element={<Navigate to="/farmer/dashboard" replace />} />
 
