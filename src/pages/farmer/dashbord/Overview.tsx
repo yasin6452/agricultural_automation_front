@@ -1,87 +1,21 @@
 import { useState } from "react";
-import { Layout, Menu, Card, Typography } from "antd";
+import { Layout, Card, Typography } from "antd";
 import {
-    BarChartOutlined,
     ShopOutlined,
     EnvironmentOutlined,
     ExperimentOutlined,
-    MessageOutlined,
-    SettingOutlined,
     UserOutlined,
-    LineChartOutlined,
 } from "@ant-design/icons";
 
-const { Header, Sider, Content } = Layout;
+const { Header, Content } = Layout;
 const { Title } = Typography;
 
 export const FarmerDashboardLayout = () => {
-    const [collapsed, setCollapsed] = useState(false);
+    const [ ] = useState(false);
 
     return (
         <Layout style={{ minHeight: "100vh", direction: "rtl" }}>
             {/* سایدبار */}
-            <Sider
-                collapsible
-                collapsed={collapsed}
-                onCollapse={(value) => setCollapsed(value)}
-                width={250}
-                style={{
-                    backgroundColor: "#328E6E",
-                }}
-            >
-                <div className="text-white text-center py-5 text-xl font-bold">
-                    {!collapsed ? "پنل کشاورز" : "🌾"}
-                </div>
-                <Menu
-                    theme="dark"
-                    mode="inline"
-                    style={{ backgroundColor: "#328E6E" }}
-                    defaultSelectedKeys={["overview"]}
-                    items={[
-                        {
-                            key: "overview",
-                            icon: <BarChartOutlined />,
-                            label: "نمای کلی",
-                        },
-                        {
-                            key: "products",
-                            icon: <ShopOutlined />,
-                            label: "محصولات من",
-                        },
-                        {
-                            key: "lands",
-                            icon: <EnvironmentOutlined />,
-                            label: "زمین‌های من",
-                        },
-                        {
-                            key: "rates",
-                            icon: <LineChartOutlined />,
-                            label: "نرخ‌نامه بازار",
-                        },
-                        {
-                            key: "lab",
-                            icon: <ExperimentOutlined />,
-                            label: "آزمایش خاک و گیاه",
-                        },
-                        {
-                            key: "consult",
-                            icon: <UserOutlined />,
-                            label: "ارتباط با کارشناس",
-                        },
-                        {
-                            key: "messages",
-                            icon: <MessageOutlined />,
-                            label: "پیام‌ها",
-                        },
-                        {
-                            key: "settings",
-                            icon: <SettingOutlined />,
-                            label: "تنظیمات",
-                        },
-                    ]}
-                />
-            </Sider>
-
             {/* بخش اصلی */}
             <Layout>
                 <Header
