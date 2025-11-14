@@ -42,7 +42,7 @@ const menuItems = [
     },
     {
         key: "/farmer/dashboard/lands",
-        label: "زمین‌های من",
+        label: " مزرعه من",
         icon: <MapPin size={20} />,
         color: "#8b5cf6"
     },
@@ -151,23 +151,12 @@ export const FarmerDashboardLayout = () => {
                                 className="mr-3 text-xl font-bold"
                                 style={{ color: textColor }}
                             >
-                                آگرو تک
+                             سامانه سبزی
                             </span>
                         )}
                     </div>
 
                     {/* دکمه Collapse */}
-                    <button
-                        onClick={() => setCollapsed(!collapsed)}
-                        className="absolute left-[-16px] top-[50%] translate-y-[-50%] rounded-full p-2 shadow-xl transition-all duration-300 hover:scale-110 z-50"
-                        style={{
-                            background: darkMode ? "#1f2937" : "#ffffff",
-                            color: "#328E6E",
-                            border: `2px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
-                        }}
-                    >
-                        {collapsed ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
-                    </button>
                 </div>
 
                 {/* Search Bar */}
@@ -303,7 +292,17 @@ export const FarmerDashboardLayout = () => {
                         );
                     })}
                 </div>
-
+                <button
+                    onClick={() => setCollapsed(!collapsed)}
+                    className="absolute left-[-16px] top-[50%] translate-y-[-50%] rounded-full p-2 shadow-xl transition-all duration-300 hover:scale-110 z-50"
+                    style={{
+                        background: darkMode ? "#1f2937" : "#ffffff",
+                        color: "#328E6E",
+                        border: `2px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
+                    }}
+                >
+                    {collapsed ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+                </button>Retry
                 {/* Footer سایدبار */}
                 <div
                     className="absolute bottom-0 right-0 left-0 p-4 border-t"
@@ -353,21 +352,49 @@ export const FarmerDashboardLayout = () => {
             {/* Main layout */}
             <Layout style={{ marginRight: collapsed ? 80 : 280, transition: "margin 0.3s ease-in-out" }}>
                 {/* Header */}
-                <Header className="bg-white shadow-sm px-6 flex justify-between items-center sticky top-0 z-10">
-                    <h1 className="text-xl font-semibold text-[#328E6E] flex items-center gap-2">
-                        <div className="w-1 h-6 bg-[#328E6E] rounded-full"></div>
-                        داشبورد کشاورز
-                    </h1>
-                    <Dropdown overlay={userMenu} placement="bottomLeft">
-                        <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-4 py-2 rounded-xl transition-all duration-300">
-                            <Avatar
-                                src="https://avatars.githubusercontent.com/u/9919?s=200&v=4"
-                                size={40}
-                                className="border-2 border-[#328E6E]"
-                            />
-                            <span className="text-sm font-medium text-gray-700">سلام، علی!</span>
+                <Header
+                    className="bg-white shadow-md px-4 flex justify-between items-center sticky top-0 z-10 border-b border-gray-100"
+                    style={{ height: "64px" }}
+                >
+                    <div className="flex items-center gap-4">
+                        {/* دکمه Toggle سایدبار */}
+
+                        {/* عنوان */}
+                        <div className="flex items-center gap-2">
+                            <div className="w-1 h-6 bg-gradient-to-b from-[#328E6E] to-[#10b981] rounded-full"></div>
+                            <h1 className="text-lg font-bold text-gray-800">داشبورد کشاورز</h1>
                         </div>
-                    </Dropdown>
+                    </div>
+
+                    {/* بخش راست */}
+                    <div className="flex items-center gap-3">
+                        {/* نوتیفیکشن */}
+                        <button className="relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-all">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-600">
+                                <path d="M10 2a6 6 0 0 1 6 6v3.586l1.707 1.707A1 1 0 0 1 17 15H3a1 1 0 0 1-.707-1.707L4 11.586V8a6 6 0 0 1 6-6z" />
+                                <path d="M9 17v1a2 2 0 1 0 4 0v-1" />
+                            </svg>
+                            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                        </button>
+
+                        {/* پروفایل */}
+                        <Dropdown overlay={userMenu} placement="bottomLeft" trigger={['click']}>
+                            <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-all duration-300 border border-transparent hover:border-gray-200">
+                                <Avatar
+                                    src="https://avatars.githubusercontent.com/u/9919?s=200&v=4"
+                                    size={36}
+                                    className="border-2 border-[#328E6E]"
+                                />
+                                <div className="hidden md:block text-right">
+                                    <p className="text-sm font-semibold text-gray-800">علی احمدی</p>
+                                    <p className="text-xs text-gray-500">کشاورز</p>
+                                </div>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400 hidden md:block">
+                                    <path d="M6 9l2 2 2-2" />
+                                </svg>
+                            </div>
+                        </Dropdown>
+                    </div>
                 </Header>
 
                 {/* Main content */}
