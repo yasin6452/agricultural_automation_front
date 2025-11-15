@@ -24,6 +24,16 @@ import { Messages } from "./pages/farmer/dashbord/Messages";
 import { Settings } from "./pages/farmer/dashbord/Settings";
 
 
+// Buyer Dashboard
+import { BuyerDashboardLayout } from "./pages/buyer/BuyerDashboardLayout";
+import BuyerOverview from "./pages/buyer/Overview";
+import { MyOrders } from "./pages/buyer/MyOrders";
+import { MarketRates as BuyerMarketRates } from "./pages/buyer/MarketRates";
+import { SavedAds } from "./pages/buyer/SavedAds";
+import { Messages as BuyerMessages } from "./pages/buyer/Messages";
+import { Settings as BuyerSettings } from "./pages/buyer/Settings";
+
+
 // استایل مپ
 import 'leaflet/dist/leaflet.css';
 
@@ -70,6 +80,23 @@ function App() {
 
               </Route>
             
+            {/* مسیرهای داشبورد خریدار */}
+            <Route
+              path="/buyer/dashboard"
+              element={
+                <ProtectedRoute>
+                  <BuyerDashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<BuyerOverview />} />
+              <Route path="orders" element={<MyOrders />} />
+              <Route path="saved" element={<SavedAds />} />
+              <Route path="rates" element={<BuyerMarketRates />} />
+              <Route path="messages" element={<BuyerMessages />} />
+              <Route path="settings" element={<BuyerSettings />} />
+            </Route>
+
             {/* Redirect پیش‌فرض */}
             <Route path="/" element={<Navigate to="/farmer/dashboard" replace />} />
 
