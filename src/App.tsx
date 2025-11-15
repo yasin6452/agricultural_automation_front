@@ -15,7 +15,7 @@ import { CompleteFarmerForm } from './pages/farmer/CompleteFarmerProfile';
 // داشبورد کشاورز
 import { FarmerDashboardLayout } from './pages/farmer/dashbord/FarmerDashboardLayout';
 import  Overview  from "./pages/farmer/dashbord/Overview";
-import { MyProducts } from "./pages/farmer/dashbord/MyProducts";
+import { Marketplace } from "./pages/farmer/dashbord/Marketplace";
 import { MarketRates } from "./pages/farmer/dashbord/MarketRates";
 import { MyLands } from "./pages/farmer/dashbord/MyLands";
 import { Consultation } from "./pages/farmer/dashbord/Consultation";
@@ -60,7 +60,7 @@ function App() {
                 }
               >
                 <Route index element={<Overview />} />
-                <Route path="products" element={<MyProducts />} />
+              <Route path="products" element={<Marketplace />} />
                 <Route path="rates" element={<MarketRates />} />
                 <Route path="lands" element={<MyLands />} />
                 <Route path="consultation" element={<Consultation />} />

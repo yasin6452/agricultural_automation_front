@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { Input, Button, List, Typography, Avatar } from "antd";
-import { SendOutlined, UserOutlined } from "@ant-design/icons";
+import { Input, Button, List, Typography } from "antd";
+import { SendOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 
 interface MessageType {
     id: number;
-    sender: string; // 'self' یا 'expert'
+    sender: string; 
     content: string;
     timestamp: string;
 }

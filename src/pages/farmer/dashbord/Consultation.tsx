@@ -12,7 +12,6 @@ import {
 import {
     PlusOutlined,
     MessageOutlined,
-    UserOutlined,
 } from "@ant-design/icons";
 
 const { Option } = Select;
