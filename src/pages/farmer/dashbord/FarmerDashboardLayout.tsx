@@ -47,11 +47,10 @@ const menuItems = [
         color: "#8b5cf6"
     },
     {
-        key: "/farmer/dashboard/consultation",
-        label: "مشاوره",
+        key: "/farmer/dashboard/services",
+        label: "خدمات",
         icon: <MessageCircle size={20} />,
         color: "#3b82f6",
-        badge: 3
     },
     {
         key: "/farmer/dashboard/lab-tests",
@@ -64,7 +63,7 @@ const menuItems = [
         label: "پیام‌ها",
         icon: <MessageSquare size={20} />,
         color: "#ec4899",
-        badge: 5
+        badge: 10
     },
     {
         key: "/farmer/dashboard/settings",

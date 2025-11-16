@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, Select, Row, Col, Statistic, Tag, Table, Tabs, Space, Alert } from "antd";
+import { Card, Select, Row, Col, Statistic, Tag, Table,  Space, Alert } from "antd";
 import {
     LineChart,
     Line,
@@ -14,7 +14,7 @@ import {
     ResponsiveContainer,
     Legend,
 } from "recharts";
-import { TrendingUp, TrendingDown, Activity, MapPin } from "lucide-react";
+import {   Activity, MapPin } from "lucide-react";
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
