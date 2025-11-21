@@ -1,6 +1,32 @@
 import { useState, useRef, useEffect } from "react";
-import { Search, Send, Paperclip, Mic, MoreVertical, Phone, Video, Info, Star, MapPin, Clock, Shield, BadgeCheck } from "lucide-react";
-import { Avatar, Badge, Dropdown, Menu, Input } from "antd";
+import {
+    Card,
+    List,
+    Avatar,
+    Badge,
+    Input,
+    Tag,
+    Button,
+    Divider,
+    Dropdown,
+    Modal
+} from "antd";
+import type { MenuProps } from "antd";
+import {
+    SearchOutlined,
+    MessageOutlined,
+    SendOutlined,
+    PhoneOutlined,
+    VideoCameraOutlined,
+    MoreOutlined,
+    PaperClipOutlined,
+    AudioOutlined,
+    InfoCircleOutlined,
+    StarFilled,
+    EnvironmentOutlined,
+    BlockOutlined
+} from "@ant-design/icons";
+import { MessageCircle, BadgeCheck, Shield } from "lucide-react";
 
 interface Chat {
     id: number;
@@ -25,7 +51,6 @@ interface Message {
 }
 
 export default function Messages() {
-    // لیست چت‌ها
     const [chats, setChats] = useState<Chat[]>([
         {
             id: 1,
@@ -77,7 +102,8 @@ export default function Messages() {
         },
     ]);
 
-    const [activeChat, setActiveChat] = useState(1);
+    const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
+    const [isChatModalOpen, setIsChatModalOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [messages, setMessages] = useState<Message[]>([
         { id: 1, from: "them", text: "سلام، محصول سیب با کیفیت عالی موجود دارید؟", time: "10:40", type: "text", read: true },
@@ -94,8 +120,6 @@ export default function Messages() {
         chat.lastMessage.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const activeChatData = chats.find(chat => chat.id === activeChat);
-
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
@@ -104,8 +128,13 @@ export default function Messages() {
         scrollToBottom();
     }, [messages]);
 
+    const handleOpenChat = (chat: Chat) => {
+        setSelectedChat(chat);
+        setIsChatModalOpen(true);
+    };
+
     const sendMessage = () => {
-        if (!input.trim()) return;
+        if (!input.trim() || !selectedChat) return;
 
         const newMessage: Message = {
             id: messages.length + 1,
@@ -118,10 +147,9 @@ export default function Messages() {
 
         setMessages([...messages, newMessage]);
 
-        // آپدیت last message در لیست چت‌ها
         setChats(prevChats =>
             prevChats.map(chat =>
-                chat.id === activeChat
+                chat.id === selectedChat.id
                     ? { ...chat, lastMessage: input.trim(), time: "اکنون", unread: 0 }
                     : chat
             )
@@ -130,240 +158,350 @@ export default function Messages() {
         setInput("");
     };
 
-    const chatMenu = (
-        <Menu
-            items={[
-                { key: '1', label: 'مشاهده پروفایل', icon: <Info size={16} /> },
-                { key: '2', label: 'تماس صوتی', icon: <Phone size={16} /> },
-                { key: '3', label: 'تماس تصویری', icon: <Video size={16} /> },
-                { key: '4', label: 'اشتراک‌گذاری موقعیت', icon: <MapPin size={16} /> },
-                { key: '5', label: 'بلاک کردن', danger: true },
-            ]}
-        />
-    );
+    const totalUnread = chats.reduce((sum, chat) => sum + chat.unread, 0);
+    const onlineCount = chats.filter(c => c.online).length;
+
+    const getRoleConfig = (role: string) => {
+        const configs = {
+            "تأمین‌کننده": { label: "تأمین‌کننده", color: "blue" },
+            "فروشنده": { label: "فروشنده", color: "green" },
+            "کشاورز": { label: "کشاورز", color: "orange" },
+        };
+        return configs[role as keyof typeof configs] || { label: role, color: "default" };
+    };
+
+    const menuItems: MenuProps['items'] = [
+        {
+            key: 'profile',
+            label: 'مشاهده پروفایل',
+            icon: <InfoCircleOutlined />,
+        },
+        {
+            key: 'audio',
+            label: 'تماس صوتی',
+            icon: <PhoneOutlined />,
+        },
+        {
+            key: 'video',
+            label: 'تماس تصویری',
+            icon: <VideoCameraOutlined />,
+        },
+        {
+            key: 'location',
+            label: 'اشتراک‌گذاری موقعیت',
+            icon: <EnvironmentOutlined />,
+        },
+        {
+            type: 'divider',
+        },
+        {
+            key: 'block',
+            label: 'بلاک کردن',
+            icon: <BlockOutlined />,
+            danger: true,
+        },
+    ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6 font-[IRANSans]">
-            <div className="max-w-7xl mx-auto">
-                {/* هدر */}
-                <div className="mb-6">
-                    <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-                        <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                            <Send className="text-white" size={24} />
-                        </div>
-                        پیام‌ها
-                    </h1>
-                    <p className="text-gray-600 mt-2">ارتباط مستقیم با تأمین‌کنندگان و کشاورزان</p>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+            {/* Header */}
+            <div className="mb-6 animate-fadeIn">
+                <div className="flex justify-between items-center mb-4">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+                                <MessageCircle className="text-white" size={24} />
+                            </div>
+                            پیام‌ها
+                        </h1>
+                        <p className="text-gray-500 mt-2">مکالمات و ارتباطات شما</p>
+                    </div>
                 </div>
 
-                <div className="flex h-[calc(100vh-180px)] bg-white rounded-2xl shadow-lg border border-green-100 overflow-hidden">
-                    {/* سایدبار چت‌ها */}
-                    <div className="w-1/3 border-l border-gray-200 flex flex-col">
-                        {/* هدر سایدبار */}
-                        <div className="p-4 border-b border-gray-200">
-                            <div className="relative">
-                                <Search className="absolute right-3 top-3 text-gray-400" size={18} />
-                                <Input
-                                    placeholder="جستجو در پیام‌ها..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="pr-10 rounded-xl"
-                                    size="large"
-                                />
+                {/* آمار */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <Card className="shadow-md hover:shadow-lg transition-all">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-gray-500 text-sm">کل مکالمات</p>
+                                <p className="text-2xl font-bold text-gray-800">{chats.length}</p>
                             </div>
+                            <MessageOutlined className="text-3xl text-blue-500" />
                         </div>
+                    </Card>
+                    <Card className="shadow-md hover:shadow-lg transition-all">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-gray-500 text-sm">پیام‌های خوانده نشده</p>
+                                <p className="text-2xl font-bold text-orange-600">{totalUnread}</p>
+                            </div>
+                            {totalUnread > 0 && (
+                                <Badge count={totalUnread} style={{ backgroundColor: '#fa8c16' }} />
+                            )}
+                        </div>
+                    </Card>
+                    <Card className="shadow-md hover:shadow-lg transition-all">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-gray-500 text-sm">آنلاین</p>
+                                <p className="text-2xl font-bold text-green-600">{onlineCount}</p>
+                            </div>
+                            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        </div>
+                    </Card>
+                </div>
+            </div>
 
-                        {/* لیست چت‌ها */}
-                        <div className="flex-1 overflow-y-auto">
-                            {filteredChats.map((chat) => (
-                                <div
-                                    key={chat.id}
-                                    onClick={() => setActiveChat(chat.id)}
-                                    className={`p-4 border-b border-gray-100 cursor-pointer transition-all duration-200 ${activeChat === chat.id
-                                            ? "bg-gradient-to-r from-green-50 to-emerald-50 border-r-4 border-green-500"
-                                            : "hover:bg-gray-50"
-                                        }`}
+            {/* لیست مکالمات */}
+            <Card className="shadow-lg rounded-2xl">
+                <div className="mb-4">
+                    <Input
+                        placeholder="جستجوی مخاطب..."
+                        prefix={<SearchOutlined />}
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        size="large"
+                        className="rounded-lg"
+                    />
+                </div>
+
+                {filteredChats.length > 0 ? (
+                    <List
+                        itemLayout="horizontal"
+                        dataSource={filteredChats}
+                        renderItem={(chat) => {
+                            const roleConfig = getRoleConfig(chat.role);
+                            return (
+                                <List.Item
+                                    className="hover:bg-gray-50 rounded-lg p-4 cursor-pointer transition-all"
+                                    onClick={() => handleOpenChat(chat)}
                                 >
-                                    <div className="flex items-start gap-3">
-                                        <div className="relative">
-                                            <Avatar
-                                                src={chat.avatar}
-                                                size={48}
-                                                className="border-2 border-white shadow-sm"
-                                            />
-                                            {chat.online && (
-                                                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                                            )}
-                                        </div>
-
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center justify-between mb-1">
+                                    <List.Item.Meta
+                                        avatar={
+                                            <Badge dot={chat.online} offset={[-5, 35]} color="green">
+                                                <Avatar src={chat.avatar} size={56} />
+                                            </Badge>
+                                        }
+                                        title={
+                                            <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-semibold text-gray-800 truncate">
+                                                    <span className="font-semibold text-gray-800">
                                                         {chat.name}
                                                     </span>
                                                     {chat.verified && (
-                                                        <BadgeCheck className="text-blue-500" size={16} />
+                                                        <BadgeCheck className="text-blue-500 flex-shrink-0" size={16} />
                                                     )}
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    <span className="text-xs text-gray-500">{chat.time}</span>
                                                     {chat.unread > 0 && (
-                                                        <Badge count={chat.unread} className="bg-green-500" />
+                                                        <Badge count={chat.unread} />
                                                     )}
+                                                    <span className="text-xs text-gray-400">
+                                                        {chat.time}
+                                                    </span>
                                                 </div>
                                             </div>
-
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">
-                                                    {chat.role}
-                                                </span>
-                                                <div className="flex items-center gap-1">
-                                                    <Star size={12} className="text-yellow-500 fill-current" />
-                                                    <span className="text-xs text-gray-600">{chat.rating}</span>
+                                        }
+                                        description={
+                                            <div className="space-y-1">
+                                                <div className="flex items-center gap-2">
+                                                    <Tag color={roleConfig.color} className="text-xs">
+                                                        {roleConfig.label}
+                                                    </Tag>
+                                                    <div className="flex items-center gap-1">
+                                                        <StarFilled className="text-yellow-500 text-xs" />
+                                                        <span className="text-xs text-gray-600">{chat.rating}</span>
+                                                    </div>
                                                 </div>
+                                                <p className="text-gray-600 text-sm truncate">
+                                                    {chat.lastMessage}
+                                                </p>
                                             </div>
+                                        }
+                                    />
+                                </List.Item>
+                            );
+                        }}
+                    />
+                ) : (
+                    <div className="text-center py-8">
+                        <p className="text-gray-500">مکالمه‌ای پیدا نشد</p>
+                    </div>
+                )}
+            </Card>
 
-                                            <p className="text-gray-600 text-sm truncate">
-                                                {chat.lastMessage}
+            {/* Modal چت */}
+            <Modal
+                title={
+                    selectedChat && (
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <Badge dot={selectedChat.online} offset={[-5, 35]} color="green">
+                                    <Avatar src={selectedChat.avatar} size={48} />
+                                </Badge>
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <h3 className="font-bold text-gray-800">{selectedChat.name}</h3>
+                                        {selectedChat.verified && (
+                                            <Shield className="text-blue-500" size={16} />
+                                        )}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                                        <span>{selectedChat.role}</span>
+                                        <span>•</span>
+                                        <div className="flex items-center gap-1">
+                                            <StarFilled className="text-yellow-500 text-xs" />
+                                            <span>{selectedChat.rating}</span>
+                                        </div>
+                                        <span>•</span>
+                                        <span className={selectedChat.online ? 'text-green-500' : 'text-gray-400'}>
+                                            {selectedChat.online ? 'آنلاین' : 'آفلاین'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button
+                                    icon={<PhoneOutlined />}
+                                    shape="circle"
+                                    className="text-green-600 border-green-200 hover:bg-green-50"
+                                />
+                                <Button
+                                    icon={<VideoCameraOutlined />}
+                                    shape="circle"
+                                    className="text-blue-600 border-blue-200 hover:bg-blue-50"
+                                />
+                                <Dropdown
+                                    menu={{ items: menuItems }}
+                                    placement="bottomRight"
+                                    trigger={['click']}
+                                >
+                                    <Button
+                                        icon={<MoreOutlined />}
+                                        shape="circle"
+                                        className="text-gray-600 border-gray-200 hover:bg-gray-50"
+                                    />
+                                </Dropdown>
+                            </div>
+                        </div>
+                    )
+                }
+                open={isChatModalOpen}
+                onCancel={() => setIsChatModalOpen(false)}
+                footer={null}
+                width={700}
+                style={{ backdropFilter: "blur(10px)" }}
+                bodyStyle={{ padding: 0 }}
+                className="chat-modal"
+            >
+                {selectedChat && (
+                    <div className="flex flex-col h-[500px]">
+                        {/* پیام‌ها */}
+                        <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-3">
+                            {messages.map((msg) => (
+                                <div
+                                    key={msg.id}
+                                    className={`flex ${msg.from === "me" ? "justify-end" : "justify-start"}`}
+                                >
+                                    <div className="flex items-end gap-2 max-w-[70%]">
+                                        {msg.from === "them" && (
+                                            <Avatar
+                                                src={selectedChat.avatar}
+                                                size={32}
+                                            />
+                                        )}
+
+                                        <div
+                                            className={`px-4 py-3 rounded-2xl ${msg.from === "me"
+                                                    ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white"
+                                                    : "bg-white text-gray-800 shadow-md"
+                                                }`}
+                                        >
+                                            <p className="text-sm leading-relaxed">{msg.text}</p>
+                                            <p
+                                                className={`text-xs mt-2 ${msg.from === "me" ? "text-blue-100" : "text-gray-400"
+                                                    }`}
+                                            >
+                                                {msg.time}
+                                                {msg.from === "me" && (
+                                                    <span className="mr-1">
+                                                        {msg.read ? '✓✓' : '✓'}
+                                                    </span>
+                                                )}
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                             ))}
-                        </div>
-                    </div>
-
-                    {/* پنجره چت */}
-                    <div className="flex-1 flex flex-col">
-                        {/* هدر چت فعال */}
-                        {activeChatData && (
-                            <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-white">
-                                <div className="flex items-center gap-3">
-                                    <div className="relative">
-                                        <Avatar
-                                            src={activeChatData.avatar}
-                                            size={48}
-                                            className="border-2 border-green-200 shadow-sm"
-                                        />
-                                        {activeChatData.online && (
-                                            <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            <h3 className="font-bold text-gray-800">{activeChatData.name}</h3>
-                                            {activeChatData.verified && (
-                                                <Shield className="text-blue-500" size={16} />
-                                            )}
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                                            <span>{activeChatData.role}</span>
-                                            <span>•</span>
-                                            <div className="flex items-center gap-1">
-                                                <Star size={12} className="text-yellow-500 fill-current" />
-                                                <span>{activeChatData.rating}</span>
-                                            </div>
-                                            <span>•</span>
-                                            <span className={`text-xs ${activeChatData.online ? 'text-green-500' : 'text-gray-400'}`}>
-                                                {activeChatData.online ? 'آنلاین' : 'آفلاین'}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-2">
-                                    <button className="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-xl transition">
-                                        <Phone size={20} />
-                                    </button>
-                                    <button className="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-xl transition">
-                                        <Video size={20} />
-                                    </button>
-                                    <Dropdown overlay={chatMenu} placement="bottomRight">
-                                        <button className="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-xl transition">
-                                            <MoreVertical size={20} />
-                                        </button>
-                                    </Dropdown>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* پیام‌ها */}
-                        <div className="flex-1 p-6 overflow-y-auto bg-gradient-to-b from-white to-green-50">
-                            <div className="space-y-4">
-                                {messages.map((msg) => (
-                                    <div
-                                        key={msg.id}
-                                        className={`flex ${msg.from === "me" ? "justify-end" : "justify-start"}`}
-                                    >
-                                        <div className="flex items-end gap-2 max-w-[70%]">
-                                            {msg.from === "them" && (
-                                                <Avatar
-                                                    src={activeChatData?.avatar}
-                                                    size={32}
-                                                    className="border border-gray-200"
-                                                />
-                                            )}
-
-                                            <div
-                                                className={`px-4 py-3 rounded-2xl shadow-sm ${msg.from === "me"
-                                                        ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-br-none"
-                                                        : "bg-white border border-gray-200 text-gray-800 rounded-bl-none"
-                                                    }`}
-                                            >
-                                                <p className="text-sm leading-relaxed">{msg.text}</p>
-                                                <div className={`text-xs mt-1 flex items-center gap-1 ${msg.from === "me" ? "text-green-100" : "text-gray-500"
-                                                    }`}>
-                                                    <Clock size={10} />
-                                                    {msg.time}
-                                                    {msg.from === "me" && (
-                                                        <span className={`${msg.read ? 'text-blue-300' : 'text-green-200'}`}>
-                                                            {msg.read ? '✓✓' : '✓'}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                                <div ref={messagesEndRef} />
-                            </div>
+                            <div ref={messagesEndRef} />
                         </div>
 
-                        {/* نوار ارسال پیام */}
-                        <div className="p-4 border-t border-gray-200 bg-white">
-                            <div className="flex items-center gap-3">
-                                <button className="p-3 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-xl transition">
-                                    <Paperclip size={20} />
-                                </button>
+                        <Divider style={{ margin: 0 }} />
 
-                                <div className="flex-1">
-                                    <Input
-                                        value={input}
-                                        onChange={(e) => setInput(e.target.value)}
-                                        onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-                                        placeholder="پیام خود را بنویسید..."
-                                        size="large"
-                                        className="rounded-xl"
-                                    />
-                                </div>
+                        {/* ورودی پیام */}
+                        <div className="p-4 bg-white">
+                            <div className="flex items-center gap-2">
+                                <Button
+                                    icon={<PaperClipOutlined />}
+                                    shape="circle"
+                                    className="text-gray-600 border-gray-200 hover:bg-gray-50"
+                                />
 
-                                <button className="p-3 text-gray-500 hover:text-green-600 hover:bg-green-50 rounded-xl transition">
-                                    <Mic size={20} />
-                                </button>
+                                <Input
+                                    placeholder="پیام خود را بنویسید..."
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onPressEnter={sendMessage}
+                                    size="large"
+                                    className="flex-1"
+                                />
 
-                                <button
+                                <Button
+                                    icon={<AudioOutlined />}
+                                    shape="circle"
+                                    className="text-gray-600 border-gray-200 hover:bg-gray-50"
+                                />
+
+                                <Button
+                                    type="primary"
+                                    icon={<SendOutlined />}
                                     onClick={sendMessage}
                                     disabled={!input.trim()}
-                                    className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="bg-blue-600"
+                                    size="large"
                                 >
-                                    <Send size={20} />
-                                </button>
+                                    ارسال
+                                </Button>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                )}
+            </Modal>
+
+            <style>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                .animate-fadeIn {
+                    animation: fadeIn 0.5s ease-out;
+                }
+                
+                .chat-modal .ant-modal-content {
+                    backdrop-filter: blur(20px);
+                    background: rgba(255, 255, 255, 0.95);
+                }
+                
+                .chat-modal .ant-modal-body {
+                    border-radius: 0 0 8px 8px;
+                }
+                
+                /* بلور شدن پس‌زمینه وقتی مدال باز است */
+                .ant-modal-mask {
+                    backdrop-filter: blur(8px);
+                    background: rgba(0, 0, 0, 0.1);
+                }
+            `}</style>
         </div>
     );
 }

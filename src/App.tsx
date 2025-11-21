@@ -9,6 +9,8 @@ import { ProtectedRoute } from './routes/ProtectedRoute';
 import { Login } from './pages/auth/login';
 import { Register } from './pages/auth/Register';
 
+
+
 // داشبورد کشاورز
 import { FarmerDashboardLayout } from './pages/farmer/dashbord/FarmerDashboardLayout';
 import  {Overview } from "./pages/farmer/dashbord/Overview";
@@ -21,8 +23,9 @@ import { Messages  } from "./pages/farmer/dashbord/Messages";
 import { Settings  } from "./pages/farmer/dashbord/Settings";
 
 
+
 // Buyer Dashboard
-import { BuyerDashboardLayout } from "./pages/buyer/BuyerDashboardLayout";
+import  BuyerDashboardLayout  from "./pages/buyer/BuyerDashboardLayout";
 import BuyerOverview from "./pages/buyer/Overview";
 import  MyOrders  from "./pages/buyer/MyOrders";
 import  SavedAds  from "./pages/buyer/SavedAds";
@@ -88,29 +91,22 @@ function App() {
             >
               {/* صفحه اصلی داشبورد */}
               <Route index element={<BuyerOverview />} />
-
+              
               {/* سفارش‌ها */}
               <Route path="orders" element={<MyOrders />} />
-
               {/* آگهی‌های ذخیره شده */}
               <Route path="saved" element={<SavedAds />} />
-
               {/* پیام‌ها */}
               <Route path="bayerMessages" element={<Bayer_Messages />} />
-
               {/* تنظیمات */}
               <Route path="bayersetting" element={< Buyer_Settings />} />
-
               {/* تأمین‌کنندگان */}
               <Route path="suppliers" element={<Suppliers />} />
-
               {/* بازار محصولات */}
               <Route path="marketplace" element={<MarketPlace />} />
-
               {/* درخواست خرید / مناقصه معکوس */}
               <Route path="buy-requests" element={<BuyRequests />} />
               <Route path="MyOrders" element={<MyOrders />} />
-
               {/* داشبورد تحلیلی */}
               <Route path="analytics" element={<Analytics />} />
               <Route path="PriceComparison" element={<PriceComparison />} />

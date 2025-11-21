@@ -1,365 +1,420 @@
+import { Layout, Avatar, Dropdown, Menu, Badge } from "antd";
+import {
+    ShoppingCart,
+    BarChart3,
+    MessageSquare,
+    Store,
+    User,
+    Settings,
+    LogOut,
+    ChevronLeft,
+    ChevronRight,
+    ChevronDown,
+    ChevronUp,
+    Moon,
+    Sun,
+    Package,
+    TrendingUp,
+    Heart,
+    Users,
+    FileText,
+} from "lucide-react";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ShoppingCart, Heart, Bell, BarChart3, TrendingUp, Package, Users, Target, Clock, MapPin, Star, Eye, MessageCircle } from "lucide-react";
-import { Badge, Progress, Card, Avatar } from "antd";
 
-interface Order {
-    id: number;
-    product: string;
-    seller: string;
-    status: 'pending' | 'shipped' | 'delivered';
-    amount: number;
-    date: string;
-    progress: number;
-}
+const { Sider, Content, Header } = Layout;
 
-interface Activity {
-    id: number;
-    type: 'order' | 'save' | 'view' | 'message';
-    title: string;
-    description: string;
-    time: string;
-    icon: any;
-    color: string;
-}
+const menuItems = [
+    {
+        key: "/buyer/dashboard",
+        label: "نمای کلی",
+        icon: <BarChart3 size={20} />,
+        color: "#10b981"
+    },
+    {
+        key: "market-group",
+        label: "بازار",
+        icon: <Store size={20} />,
+        color: "#3b82f6",
+        children: [
+            { key: "/buyer/dashboard/marketplace", label: "فروشگاه", icon: <ShoppingCart size={18} /> },
+            { key: "/buyer/dashboard/price-comparison", label: "مقایسه قیمت", icon: <TrendingUp size={18} /> },
+        ]
+    },
+    {
+        key: "/buyer/dashboard/suppliers",
+        label: "تأمین‌کنندگان",
+        icon: <Users size={20} />,
+        color: "#8b5cf6"
+    },
+    {
+        key: "/buyer/dashboard/buy-requests",
+        label: "درخواست‌های خرید",
+        icon: <FileText size={20} />,
+        color: "#f59e0b"
+    },
+    {
+        key: "/buyer/dashboard/orders",
+        label: "سفارشات من",
+        icon: <Package size={20} />,
+        color: "#ec4899"
+    },
+    {
+        key: "/buyer/dashboard/saved",
+        label: "علاقه‌مندی‌ها",
+        icon: <Heart size={20} />,
+        color: "#ef4444"
+    },
+    {
+        key: "/buyer/dashboard/bayerMessages",
+        label: "پیام‌ها",
+        icon: <MessageSquare size={20} />,
+        color: "#06b6d4",
+        badge: 5
+    },
+    {
+        key: "/buyer/dashboard/analytics",
+        label: "تحلیل‌ها",
+        icon: <BarChart3 size={20} />,
+        color: "#84cc16"
+    },
+    {
+        key: "/buyer/dashboard/bayersetting",
+        label: "تنظیمات",
+        icon: <Settings size={20} />,
+        color: "#6b7280"
+    },
+];
 
-export default function BuyerOverview() {
-    const [stats] = useState({
-        activeOrders: 3,
-        savedAds: 12,
-        alerts: 4,
-        aiReports: 2,
-        totalSpent: 12500000,
-        completedOrders: 45,
-        successRate: 96,
-        favoriteSuppliers: 8
-    });
+export const BuyerDashboardLayout = () => {
+    const [collapsed, setCollapsed] = useState(false);
+    const [darkMode, setDarkMode] = useState(false);
+    const [expandedMenus, setExpandedMenus] = useState<string[]>([]);
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    const [recentOrders] = useState<Order[]>([
-        {
-            id: 1,
-            product: "سیب قرمز ممتاز",
-            seller: "مزرعه سبز",
-            status: 'shipped',
-            amount: 2400000,
-            date: "1402/10/15",
-            progress: 75
-        },
-        {
-            id: 2,
-            product: "برنج طارم هاشمی",
-            seller: "شالیزار شمال",
-            status: 'pending',
-            amount: 4500000,
-            date: "1402/10/14",
-            progress: 25
-        },
-        {
-            id: 3,
-            product: "گوجه فرنگی گلخانه‌ای",
-            seller: "کشاورز نمونه",
-            status: 'delivered',
-            amount: 1200000,
-            date: "1402/10/13",
-            progress: 100
-        }
-    ]);
+    const toggleSubmenu = (key: string) => {
+        setExpandedMenus(prev =>
+            prev.includes(key)
+                ? prev.filter(k => k !== key)
+                : [...prev, key]
+        );
+    };
 
-    const [activities] = useState<Activity[]>([
-        {
-            id: 1,
-            type: 'order',
-            title: "سفارش جدید",
-            description: "خرید ۲۰ کیلو سیب از «مزرعه سبز»",
-            time: "2 ساعت پیش",
-            icon: ShoppingCart,
-            color: "text-green-500"
-        },
-        {
-            id: 2,
-            type: 'save',
-            title: "ذخیره آگهی",
-            description: "ذخیره آگهی «گوجه فرنگی ارگانیک»",
-            time: "4 ساعت پیش",
-            icon: Heart,
-            color: "text-red-500"
-        },
-        {
-            id: 3,
-            type: 'view',
-            title: "تحلیل هوشمند",
-            description: "مشاهده گزارش AI: «تحلیل قیمت سیب»",
-            time: "1 روز پیش",
-            icon: BarChart3,
-            color: "text-blue-500"
-        },
-        {
-            id: 4,
-            type: 'message',
-            title: "پیام جدید",
-            description: "ارسال پیام به فروشنده «باغ البرز»",
-            time: "1 روز پیش",
-            icon: MessageCircle,
-            color: "text-purple-500"
-        }
-    ]);
-
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'pending': return 'bg-yellow-100 text-yellow-700';
-            case 'shipped': return 'bg-blue-100 text-blue-700';
-            case 'delivered': return 'bg-green-100 text-green-700';
-            default: return 'bg-gray-100 text-gray-700';
+    const handleMenuClick = ({ key }: { key: string }) => {
+        if (key === "logout") {
+            localStorage.removeItem("token");
+            navigate("/login");
+        } else if (key === "profile") {
+            navigate("/buyer/dashboard/settings");
         }
     };
 
-    const getStatusText = (status: string) => {
-        switch (status) {
-            case 'pending': return 'در انتظار';
-            case 'shipped': return 'ارسال شده';
-            case 'delivered': return 'تحویل شده';
-            default: return 'نامشخص';
-        }
-    };
+    const userMenu = (
+        <Menu
+            onClick={handleMenuClick}
+            items={[
+                { key: "profile", label: "پروفایل من", icon: <User size={16} /> },
+                { key: "logout", label: "خروج", icon: <LogOut size={16} />, danger: true },
+            ]}
+        />
+    );
+
+    const bgColor = darkMode ? "#1a1f2e" : "#ffffff";
+    const textColor = darkMode ? "#e5e7eb" : "#1f2937";
+    const hoverBg = darkMode ? "rgba(255, 255, 255, 0.1)" : "rgba(59, 130, 246, 0.08)";
+    const activeBg = darkMode ? "rgba(59, 130, 246, 0.2)" : "#3b82f6";
+    const activeText = darkMode ? "#60a5fa" : "#ffffff";
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6 font-[IRANSans]">
-            <div className="max-w-7xl mx-auto">
-                {/* هدر */}
-                <div className="mb-8">
-                    <div className="flex items-center justify-between mb-6">
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-                                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <Target className="text-white" size={24} />
-                                </div>
-                                نمای کلی خریدار
-                            </h1>
-                            <p className="text-gray-600 mt-2">خلاصه فعالیت‌ها و آمار عملکرد شما</p>
+        <Layout className="min-h-screen bg-[#F7FAFC] font-[IRANSans]">
+            {/* Sidebar مدرن */}
+            <Sider
+                collapsible
+                collapsed={collapsed}
+                onCollapse={setCollapsed}
+                width={280}
+                collapsedWidth={80}
+                trigger={null}
+                className="shadow-2xl transition-all duration-300"
+                style={{
+                    position: "fixed",
+                    height: "100vh",
+                    right: 0,
+                    background: bgColor,
+                    borderLeft: darkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.05)",
+                }}
+            >
+                {/* Header سایدبار */}
+                <div className="relative border-b" style={{ borderColor: darkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)" }}>
+                    <div className="flex items-center justify-center py-6">
+                        <div
+                            className="p-3 rounded-2xl transition-all duration-300"
+                            style={{
+                                background: darkMode
+                                    ? "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)"
+                                    : "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)"
+                            }}
+                        >
+                            <ShoppingCart size={28} className={!collapsed ? "ml-2" : ""} style={{ color: "#fff" }} />
                         </div>
-
-                        <div className="flex items-center gap-4">
-                            <div className="bg-white p-4 rounded-2xl shadow-sm border border-green-100">
-                                <div className="text-xs text-gray-500">سفارشات تکمیل شده</div>
-                                <div className="text-xl font-bold text-gray-800">{stats.completedOrders}</div>
-                            </div>
-                            <div className="bg-white p-4 rounded-2xl shadow-sm border border-green-100">
-                                <div className="text-xs text-gray-500">میزان موفقیت</div>
-                                <div className="text-xl font-bold text-green-600">{stats.successRate}%</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* کارت‌های آماری */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                        <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm text-gray-500">سفارشات فعال</div>
-                                    <div className="text-lg font-bold text-gray-800">{stats.activeOrders}</div>
-                                    <div className="text-xs text-green-500 flex items-center gap-1 mt-1">
-                                        <TrendingUp size={12} />
-                                        +2 از ماه گذشته
-                                    </div>
-                                </div>
-                                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                                    <ShoppingCart className="text-green-600" size={24} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm text-gray-500">آگهی‌های ذخیره‌شده</div>
-                                    <div className="text-lg font-bold text-gray-800">{stats.savedAds}</div>
-                                    <div className="text-xs text-red-500 flex items-center gap-1 mt-1">
-                                        <Heart size={12} />
-                                        مورد علاقه
-                                    </div>
-                                </div>
-                                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                                    <Heart className="text-red-600" size={24} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm text-gray-500">اعلان‌ها</div>
-                                    <div className="text-lg font-bold text-gray-800">{stats.alerts}</div>
-                                    <div className="text-xs text-yellow-500 flex items-center gap-1 mt-1">
-                                        <Bell size={12} />
-                                        نیاز به توجه
-                                    </div>
-                                </div>
-                                <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                                    <Bell className="text-yellow-600" size={24} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm text-gray-500">تحلیل‌های هوشمند</div>
-                                    <div className="text-lg font-bold text-gray-800">{stats.aiReports}</div>
-                                    <div className="text-xs text-blue-500 flex items-center gap-1 mt-1">
-                                        <BarChart3 size={12} />
-                                        جدید
-                                    </div>
-                                </div>
-                                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                                    <BarChart3 className="text-blue-600" size={24} />
-                                </div>
-                            </div>
-                        </div>
+                        {!collapsed && (
+                            <span
+                                className="mr-3 text-xl font-bold"
+                                style={{ color: textColor }}
+                            >
+                                سامانه خریدار
+                            </span>
+                        )}
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* سفارشات اخیر */}
-                    <div className="bg-white rounded-2xl shadow-lg border border-green-100 overflow-hidden">
-                        <div className="p-6 border-b border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                <Package className="text-green-500" />
-                                سفارشات اخیر
-                            </h2>
+                {/* Search Bar */}
+                {!collapsed && (
+                    <div className="px-4 py-4">
+                        <div
+                            className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all"
+                            style={{
+                                background: darkMode ? "rgba(255,255,255,0.05)" : "#f3f4f6",
+                                border: `1px solid ${darkMode ? "rgba(255,255,255,0.1)" : "transparent"}`
+                            }}
+                        >
+                            <svg width="18" height="18" fill="none" stroke={darkMode ? "#9ca3af" : "#6b7280"} strokeWidth="2">
+                                <circle cx="8" cy="8" r="6" />
+                                <path d="M12.5 12.5L16 16" />
+                            </svg>
+                            <input
+                                type="text"
+                                placeholder="جستجو در محصولات..."
+                                className="bg-transparent outline-none text-sm flex-1"
+                                style={{ color: textColor }}
+                            />
                         </div>
+                    </div>
+                )}
 
-                        <div className="p-6 space-y-4">
-                            {recentOrders.map((order) => (
-                                <div key={order.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-green-300 transition-all">
+                {/* منوی اصلی */}
+                <div className="flex flex-col overflow-y-auto h-[calc(100vh-240px)] px-3 space-y-1">
+                    {menuItems.map((item) => {
+                        const isActive = location.pathname === item.key;
+                        const hasChildren = item.children && item.children.length > 0;
+                        const isExpanded = expandedMenus.includes(item.key);
+
+                        return (
+                            <div key={item.key}>
+                                {/* منوی اصلی */}
+                                <div
+                                    onClick={() => {
+                                        if (hasChildren) {
+                                            toggleSubmenu(item.key);
+                                        } else {
+                                            navigate(item.key);
+                                        }
+                                    }}
+                                    className="flex items-center justify-between px-4 py-3 rounded-xl cursor-pointer transition-all duration-300"
+                                    style={{
+                                        background: isActive ? activeBg : "transparent",
+                                        color: isActive ? activeText : textColor,
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        if (!isActive) {
+                                            e.currentTarget.style.background = hoverBg;
+                                        }
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        if (!isActive) {
+                                            e.currentTarget.style.background = "transparent";
+                                        }
+                                    }}
+                                >
                                     <div className="flex items-center gap-3">
-                                        <Avatar
-                                            size="large"
-                                            className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold"
+                                        <div
+                                            className="flex items-center justify-center w-9 h-9 rounded-lg transition-all"
+                                            style={{
+                                                background: isActive
+                                                    ? "rgba(255,255,255,0.2)"
+                                                    : darkMode ? "rgba(255,255,255,0.05)" : "transparent",
+                                                color: isActive ? activeText : item.color
+                                            }}
                                         >
-                                            {order.product.charAt(0)}
-                                        </Avatar>
-                                        <div>
-                                            <div className="font-semibold text-gray-800">{order.product}</div>
-                                            <div className="text-sm text-gray-500 flex items-center gap-2">
-                                                <span>{order.seller}</span>
-                                                <span>•</span>
-                                                <span>{order.date}</span>
+                                            {item.icon}
+                                        </div>
+                                        {!collapsed && (
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[15px] font-medium">{item.label}</span>
+                                                {item.badge && (
+                                                    <Badge
+                                                        count={item.badge}
+                                                        style={{
+                                                            background: "#ef4444",
+                                                            fontSize: "10px",
+                                                            minWidth: "18px",
+                                                            height: "18px",
+                                                            lineHeight: "18px"
+                                                        }}
+                                                    />
+                                                )}
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
-
-                                    <div className="text-right">
-                                        <div className="font-bold text-green-600">{order.amount.toLocaleString()} تومان</div>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <Badge
-                                                className={getStatusColor(order.status)}
-                                                count={getStatusText(order.status)}
-                                            />
-                                            <Progress
-                                                percent={order.progress}
-                                                size="small"
-                                                strokeColor={
-                                                    order.progress === 100 ? '#10b981' :
-                                                        order.progress > 50 ? '#3b82f6' : '#f59e0b'
-                                                }
-                                                style={{ width: '60px' }}
-                                            />
+                                    {!collapsed && hasChildren && (
+                                        <div style={{ color: isActive ? activeText : textColor }}>
+                                            {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                                         </div>
-                                    </div>
+                                    )}
                                 </div>
-                            ))}
 
-                            <button className="w-full flex items-center justify-center gap-2 py-3 border border-dashed border-gray-300 rounded-xl text-gray-500 hover:text-green-600 hover:border-green-300 transition-all">
-                                <Eye size={16} />
-                                مشاهده همه سفارشات
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* فعالیت‌های اخیر */}
-                    <div className="bg-white rounded-2xl shadow-lg border border-green-100 overflow-hidden">
-                        <div className="p-6 border-b border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                <Clock className="text-blue-500" />
-                                فعالیت‌های اخیر
-                            </h2>
-                        </div>
-
-                        <div className="p-6 space-y-4">
-                            {activities.map((activity) => (
-                                <div key={activity.id} className="flex items-start gap-3 p-3 border border-gray-200 rounded-xl hover:border-green-300 transition-all">
-                                    <div className={`p-2 rounded-lg ${activity.color.replace('text', 'bg')} bg-opacity-10`}>
-                                        <activity.icon size={16} className={activity.color} />
+                                {/* زیر منو */}
+                                {hasChildren && isExpanded && !collapsed && (
+                                    <div className="mr-6 mt-1 space-y-1">
+                                        {item.children?.map((child) => {
+                                            const isChildActive = location.pathname === child.key;
+                                            return (
+                                                <Link
+                                                    key={child.key}
+                                                    to={child.key}
+                                                    className="flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-300"
+                                                    style={{
+                                                        background: isChildActive ? activeBg : "transparent",
+                                                        color: isChildActive ? activeText : textColor,
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        if (!isChildActive) {
+                                                            e.currentTarget.style.background = hoverBg;
+                                                        }
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        if (!isChildActive) {
+                                                            e.currentTarget.style.background = "transparent";
+                                                        }
+                                                    }}
+                                                >
+                                                    <div style={{ color: isChildActive ? activeText : "#94a3b8" }}>
+                                                        {child.icon}
+                                                    </div>
+                                                    <span className="text-sm">{child.label}</span>
+                                                </Link>
+                                            );
+                                        })}
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="font-semibold text-gray-800">{activity.title}</div>
-                                        <div className="text-sm text-gray-600">{activity.description}</div>
-                                        <div className="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                                            <Clock size={12} />
-                                            {activity.time}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-
-                            <button className="w-full flex items-center justify-center gap-2 py-3 border border-dashed border-gray-300 rounded-xl text-gray-500 hover:text-green-600 hover:border-green-300 transition-all">
-                                <BarChart3 size={16} />
-                                مشاهده گزارش کامل
-                            </button>
-                        </div>
-                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
                 </div>
 
-                {/* آمار پایین */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <div className="text-sm text-gray-500">کل هزینه‌ها</div>
-                                <div className="text-2xl font-bold text-green-600">{(stats.totalSpent / 1000000).toFixed(1)}M</div>
-                            </div>
-                            <TrendingUp className="text-green-500" size={24} />
-                        </div>
-                        <Progress
-                            percent={75}
-                            strokeColor="#10b981"
-                            showInfo={false}
-                        />
-                        <div className="text-xs text-gray-500 mt-2">+15% نسبت به ماه گذشته</div>
-                    </div>
+                {/* دکمه Collapse */}
+                <button
+                    onClick={() => setCollapsed(!collapsed)}
+                    className="absolute left-[-16px] top-[50%] translate-y-[-50%] rounded-full p-2 shadow-xl transition-all duration-300 hover:scale-110 z-50"
+                    style={{
+                        background: darkMode ? "#1f2937" : "#ffffff",
+                        color: "#3b82f6",
+                        border: `2px solid ${darkMode ? "#374151" : "#e5e7eb"}`,
+                    }}
+                >
+                    {collapsed ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+                </button>
 
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <div className="text-sm text-gray-500">تأمین‌کنندگان مورد علاقه</div>
-                                <div className="text-2xl font-bold text-purple-600">{stats.favoriteSuppliers}</div>
+                {/* Footer سایدبار */}
+                <div
+                    className="absolute bottom-0 right-0 left-0 p-4 border-t"
+                    style={{
+                        background: bgColor,
+                        borderColor: darkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)"
+                    }}
+                >
+                    {!collapsed ? (
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <Avatar
+                                    src="https://avatars.githubusercontent.com/u/9919?s=200&v=4"
+                                    size={36}
+                                />
+                                <div>
+                                    <p className="text-sm font-medium" style={{ color: textColor }}>محمد رضایی</p>
+                                    <p className="text-xs" style={{ color: darkMode ? "#9ca3af" : "#6b7280" }}>خریدار</p>
+                                </div>
                             </div>
-                            <Users className="text-purple-500" size={24} />
+                            <button
+                                onClick={() => setDarkMode(!darkMode)}
+                                className="p-2 rounded-lg transition-all hover:scale-110"
+                                style={{ background: hoverBg }}
+                            >
+                                {darkMode ? <Sun size={18} color="#fbbf24" /> : <Moon size={18} color="#6b7280" />}
+                            </button>
                         </div>
-                        <Progress
-                            percent={60}
-                            strokeColor="#8b5cf6"
-                            showInfo={false}
-                        />
-                        <div className="text-xs text-gray-500 mt-2">+5 مورد جدید</div>
-                    </div>
-
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <div className="text-sm text-gray-500">میانگین امتیاز</div>
-                                <div className="text-2xl font-bold text-yellow-600">4.8</div>
-                            </div>
-                            <Star className="text-yellow-500 fill-current" size={24} />
+                    ) : (
+                        <div className="flex flex-col items-center gap-3">
+                            <Avatar
+                                src="https://avatars.githubusercontent.com/u/9919?s=200&v=4"
+                                size={36}
+                            />
+                            <button
+                                onClick={() => setDarkMode(!darkMode)}
+                                className="p-2 rounded-lg transition-all hover:scale-110"
+                                style={{ background: hoverBg }}
+                            >
+                                {darkMode ? <Sun size={18} color="#fbbf24" /> : <Moon size={18} color="#6b7280" />}
+                            </button>
                         </div>
-                        <Progress
-                            percent={96}
-                            strokeColor="#f59e0b"
-                            showInfo={false}
-                        />
-                        <div className="text-xs text-gray-500 mt-2">از ۵.۰ امتیاز</div>
-                    </div>
+                    )}
                 </div>
-            </div>
-        </div>
+            </Sider>
+
+            {/* Main layout */}
+            <Layout style={{ marginRight: collapsed ? 80 : 280, transition: "margin 0.3s ease-in-out" }}>
+                {/* Header */}
+                <Header
+                    className="bg-white shadow-md px-4 flex justify-between items-center sticky top-0 z-10 border-b border-gray-100"
+                    style={{ height: "64px" }}
+                >
+                    <div className="flex items-center gap-4">
+                        {/* عنوان */}
+                        <div className="flex items-center gap-2">
+                            <div className="w-1 h-6 bg-gradient-to-b from-[#3b82f6] to-[#60a5fa] rounded-full"></div>
+                            <h1 className="text-lg font-bold text-gray-800">داشبورد خریدار</h1>
+                        </div>
+                    </div>
+
+                    {/* بخش راست */}
+                    <div className="flex items-center gap-3">
+                        {/* نوتیفیکیشن */}
+                        <button className="relative w-10 h-10 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-all">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-600">
+                                <path d="M10 2a6 6 0 0 1 6 6v3.586l1.707 1.707A1 1 0 0 1 17 15H3a1 1 0 0 1-.707-1.707L4 11.586V8a6 6 0 0 1 6-6z" />
+                                <path d="M9 17v1a2 2 0 1 0 4 0v-1" />
+                            </svg>
+                            <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                        </button>
+
+                        {/* پروفایل */}
+                        <Dropdown overlay={userMenu} placement="bottomLeft" trigger={['click']}>
+                            <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-all duration-300 border border-transparent hover:border-gray-200">
+                                <Avatar
+                                    src="https://avatars.githubusercontent.com/u/9919?s=200&v=4"
+                                    size={36}
+                                    className="border-2 border-[#3b82f6]"
+                                />
+                                <div className="hidden md:block text-right">
+                                    <p className="text-sm font-semibold text-gray-800">محمد رضایی</p>
+                                    <p className="text-xs text-gray-500">خریدار</p>
+                                </div>
+                                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400 hidden md:block">
+                                    <path d="M6 9l2 2 2-2" />
+                                </svg>
+                            </div>
+                        </Dropdown>
+                    </div>
+                </Header>
+
+                {/* Main content */}
+                <Content className="m-6 p-6 bg-white rounded-2xl shadow-md min-h-[calc(100vh-120px)]">
+                    <Outlet />
+                </Content>
+            </Layout>
+        </Layout>
     );
-}
+};
+
+export default BuyerDashboardLayout;

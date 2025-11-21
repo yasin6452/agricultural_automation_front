@@ -1,28 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Star } from "lucide-react";
-
-import {
-    TrendingUp,
-    TrendingDown,
-    DollarSign,
-    ShoppingCart,
-    Package,
-    Users,
-    BarChart3,
-    Target,
-    PieChart,
-    Calendar,
-    Download,
-    Filter,
-    Sparkles,
-    Award,
-    Crown,
-    Lightbulb,
-    Clock,
-    MapPin
-} from "lucide-react";
-import { Card, Badge, Progress, Select, DatePicker, Tooltip, Avatar, Rate } from "antd";
-import { Line, Bar, Pie, Doughnut } from 'react-chartjs-2';
+import { Star, TrendingUp, TrendingDown, DollarSign, ShoppingCart,  Users, BarChart3, Target, PieChart, Download, Sparkles, Award, Crown, Lightbulb, Clock } from "lucide-react";
+import { Card, Badge, Progress, Select, DatePicker, Avatar, Rate, Row, Col } from "antd";
+import { Line, Bar, Pie } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -36,6 +15,7 @@ import {
     Legend,
 } from 'chart.js';
 
+// ثبت کامپوننت‌های Chart.js
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -49,6 +29,7 @@ ChartJS.register(
 );
 
 const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 interface AnalyticsData {
     cost: number;
@@ -80,7 +61,7 @@ interface SupplierAnalytics {
 const Analytics: React.FC = () => {
     const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
     const [timeRange, setTimeRange] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
-    const [selectedPeriod, setSelectedPeriod] = useState<any>(null);
+    const [ setSelectedPeriod] = useState<any>(null);
     const [topProducts, setTopProducts] = useState<ProductPerformance[]>([]);
     const [supplierAnalytics, setSupplierAnalytics] = useState<SupplierAnalytics[]>([]);
 
@@ -112,9 +93,12 @@ const Analytics: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                setAnalytics(sampleData);
-                setTopProducts(sampleProducts);
-                setSupplierAnalytics(sampleSuppliers);
+                // شبیه‌سازی دریافت داده از API
+                setTimeout(() => {
+                    setAnalytics(sampleData);
+                    setTopProducts(sampleProducts);
+                    setSupplierAnalytics(sampleSuppliers);
+                }, 1000);
             } catch (err) {
                 console.error("Error fetching analytics data:", err);
             }
@@ -133,6 +117,7 @@ const Analytics: React.FC = () => {
                 borderColor: 'rgb(239, 68, 68)',
                 backgroundColor: 'rgba(239, 68, 68, 0.1)',
                 tension: 0.4,
+                fill: true,
             },
             {
                 label: 'درآمد (میلیون تومان)',
@@ -140,6 +125,7 @@ const Analytics: React.FC = () => {
                 borderColor: 'rgb(34, 197, 94)',
                 backgroundColor: 'rgba(34, 197, 94, 0.1)',
                 tension: 0.4,
+                fill: true,
             },
             {
                 label: 'سود (میلیون تومان)',
@@ -147,6 +133,7 @@ const Analytics: React.FC = () => {
                 borderColor: 'rgb(59, 130, 246)',
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
                 tension: 0.4,
+                fill: true,
             },
         ],
     };
@@ -158,11 +145,13 @@ const Analytics: React.FC = () => {
                 label: 'تعداد سفارشات',
                 data: analytics.map(item => item.orders),
                 backgroundColor: 'rgba(139, 92, 246, 0.8)',
+                borderRadius: 8,
             },
             {
                 label: 'تعداد مشتریان',
                 data: analytics.map(item => item.customers),
                 backgroundColor: 'rgba(14, 165, 233, 0.8)',
+                borderRadius: 8,
             },
         ],
     };
@@ -189,18 +178,29 @@ const Analytics: React.FC = () => {
     const totalCost = analytics.reduce((sum, item) => sum + item.cost, 0);
     const totalProfit = analytics.reduce((sum, item) => sum + item.profit, 0);
     const totalOrders = analytics.reduce((sum, item) => sum + item.orders, 0);
-    const avgGrowth = analytics.reduce((sum, item) => sum + item.growth, 0) / analytics.length;
+    const avgGrowth = analytics.length > 0 ? analytics.reduce((sum, item) => sum + item.growth, 0) / analytics.length : 0;
 
     const chartOptions = {
         responsive: true,
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top' as const,
                 rtl: true,
+                labels: {
+                    font: {
+                        family: 'IRANSans',
+                    },
+                    usePointStyle: true,
+                },
             },
             title: {
                 display: true,
                 text: 'تحلیل مالی دوره‌ای',
+                font: {
+                    family: 'IRANSans',
+                    size: 16,
+                },
             },
         },
         scales: {
@@ -221,35 +221,51 @@ const Analytics: React.FC = () => {
         },
     };
 
+    const handleDateChange = (dates: any, dateStrings: [string, string]) => {
+        setSelectedPeriod(dates);
+    };
+
+    const handleExport = () => {
+        // شبیه‌سازی خروجی گرفتن از داده‌ها
+        console.log("Exporting data...", { analytics, topProducts, supplierAnalytics });
+        // در اینجا می‌توانید منطق واقعی برای خروجی گرفتن پیاده‌سازی کنید
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6 font-[IRANSans]">
             {/* هدر */}
             <div className="mb-8">
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                <BarChart3 className="text-white" size={24} />
+                        <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-3">
+                            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                                <BarChart3 className="text-white" size={20} />
                             </div>
                             داشبورد هوشمند تحلیل‌ها
                         </h1>
-                        <p className="text-gray-600 mt-2">تحلیل جامع عملکرد مالی و فروش با هوش مصنوعی</p>
+                        <p className="text-gray-600 mt-2 text-sm lg:text-base">تحلیل جامع عملکرد مالی و فروش با هوش مصنوعی</p>
                     </div>
 
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full lg:w-auto">
                         <Select
                             value={timeRange}
                             onChange={setTimeRange}
-                            className="w-32"
-                            options={[
-                                { value: 'week', label: 'هفتگی' },
-                                { value: 'month', label: 'ماهانه' },
-                                { value: 'quarter', label: 'فصلی' },
-                                { value: 'year', label: 'سالانه' },
-                            ]}
+                            className="w-full sm:w-32"
+                            size="middle"
+                        >
+                            <Option value="week">هفتگی</Option>
+                            <Option value="month">ماهانه</Option>
+                            <Option value="quarter">فصلی</Option>
+                            <Option value="year">سالانه</Option>
+                        </Select>
+                        <RangePicker
+                            onChange={handleDateChange}
+                            className="w-full sm:w-auto"
                         />
-                        <RangePicker />
-                        <button className="flex items-center gap-2 px-4 py-2 bg-white border border-green-300 rounded-xl hover:shadow-lg transition-all">
+                        <button
+                            onClick={handleExport}
+                            className="flex items-center gap-2 px-4 py-2 bg-white border border-green-300 rounded-xl hover:shadow-lg transition-all w-full sm:w-auto justify-center"
+                        >
                             <Download size={18} />
                             خروجی
                         </button>
@@ -257,240 +273,289 @@ const Analytics: React.FC = () => {
                 </div>
 
                 {/* کارت‌های آماری */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <div className="text-sm text-gray-500">کل درآمد</div>
-                                <div className="text-xl font-bold text-green-600">{(totalRevenue / 1000000).toFixed(1)}M</div>
-                                <div className="text-xs text-green-500 flex items-center gap-1 mt-1">
-                                    <TrendingUp size={12} />
-                                    {avgGrowth.toFixed(1)}% رشد
+                <Row gutter={[16, 16]} className="mb-6">
+                    <Col xs={24} sm={12} lg={6}>
+                        <Card className="shadow-lg border-0 h-full">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-sm text-gray-500">کل درآمد</div>
+                                    <div className="text-xl font-bold text-green-600">{(totalRevenue / 1000000).toFixed(1)}M</div>
+                                    <div className="text-xs text-green-500 flex items-center gap-1 mt-1">
+                                        <TrendingUp size={12} />
+                                        {avgGrowth.toFixed(1)}% رشد
+                                    </div>
+                                </div>
+                                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                                    <DollarSign className="text-green-600" size={24} />
                                 </div>
                             </div>
-                            <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                                <DollarSign className="text-green-600" size={24} />
-                            </div>
-                        </div>
-                    </div>
+                        </Card>
+                    </Col>
 
-                    <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <div className="text-sm text-gray-500">کل سود</div>
-                                <div className="text-xl font-bold text-blue-600">{(totalProfit / 1000000).toFixed(1)}M</div>
-                                <div className="text-xs text-blue-500 flex items-center gap-1 mt-1">
-                                    <TrendingUp size={12} />
-                                    {(totalProfit / totalRevenue * 100).toFixed(1)}% حاشیه
+                    <Col xs={24} sm={12} lg={6}>
+                        <Card className="shadow-lg border-0 h-full">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-sm text-gray-500">کل سود</div>
+                                    <div className="text-xl font-bold text-blue-600">{(totalProfit / 1000000).toFixed(1)}M</div>
+                                    <div className="text-xs text-blue-500 flex items-center gap-1 mt-1">
+                                        <TrendingUp size={12} />
+                                        {(totalProfit / totalRevenue * 100).toFixed(1)}% حاشیه
+                                    </div>
+                                </div>
+                                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                                    <Target className="text-blue-600" size={24} />
                                 </div>
                             </div>
-                            <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                                <Target className="text-blue-600" size={24} />
-                            </div>
-                        </div>
-                    </div>
+                        </Card>
+                    </Col>
 
-                    <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <div className="text-sm text-gray-500">سفارشات</div>
-                                <div className="text-xl font-bold text-purple-600">{totalOrders}</div>
-                                <div className="text-xs text-purple-500 flex items-center gap-1 mt-1">
-                                    <Users size={12} />
-                                    {analytics[analytics.length - 1]?.customers} مشتری فعال
+                    <Col xs={24} sm={12} lg={6}>
+                        <Card className="shadow-lg border-0 h-full">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-sm text-gray-500">سفارشات</div>
+                                    <div className="text-xl font-bold text-purple-600">{totalOrders}</div>
+                                    <div className="text-xs text-purple-500 flex items-center gap-1 mt-1">
+                                        <Users size={12} />
+                                        {analytics[analytics.length - 1]?.customers || 0} مشتری فعال
+                                    </div>
+                                </div>
+                                <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                                    <ShoppingCart className="text-purple-600" size={24} />
                                 </div>
                             </div>
-                            <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                                <ShoppingCart className="text-purple-600" size={24} />
-                            </div>
-                        </div>
-                    </div>
+                        </Card>
+                    </Col>
 
-                    <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <div className="text-sm text-gray-500">کارایی</div>
-                                <div className="text-xl font-bold text-orange-600">{(totalProfit / totalCost * 100).toFixed(1)}%</div>
-                                <Progress
-                                    percent={Math.round(totalProfit / totalCost * 100)}
-                                    size="small"
-                                    strokeColor="#f59e0b"
-                                />
+                    <Col xs={24} sm={12} lg={6}>
+                        <Card className="shadow-lg border-0 h-full">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-sm text-gray-500">کارایی</div>
+                                    <div className="text-xl font-bold text-orange-600">
+                                        {(totalProfit / totalCost * 100).toFixed(1)}%
+                                    </div>
+                                    <Progress
+                                        percent={Math.round(totalProfit / totalCost * 100)}
+                                        size="small"
+                                        strokeColor="#f59e0b"
+                                        showInfo={false}
+                                    />
+                                </div>
+                                <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                                    <Award className="text-orange-600" size={24} />
+                                </div>
                             </div>
-                            <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                                <Award className="text-orange-600" size={24} />
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        </Card>
+                    </Col>
+                </Row>
             </div>
 
             {/* نمودارها */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                {/* نمودار خطی */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                            <TrendingUp className="text-green-500" size={20} />
-                            روند مالی
-                        </h3>
-                        <Badge count="زنده" className="bg-green-500" />
-                    </div>
-                    <Line data={lineChartData} options={chartOptions} height={250} />
-                </div>
+            <Row gutter={[16, 16]} className="mb-6">
+                <Col xs={24} lg={12}>
+                    <Card
+                        title={
+                            <div className="flex items-center gap-2">
+                                <TrendingUp className="text-green-500" size={20} />
+                                <span>روند مالی</span>
+                            </div>
+                        }
+                        extra={<Badge count="زنده" style={{ backgroundColor: '#52c41a' }} />}
+                        className="shadow-lg border-0 h-full"
+                    >
+                        <div className="h-64">
+                            <Line data={lineChartData} options={chartOptions} />
+                        </div>
+                    </Card>
+                </Col>
 
-                {/* نمودار میله‌ای */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <Users className="text-blue-500" size={20} />
-                        آمار سفارشات و مشتریان
-                    </h3>
-                    <Bar data={barChartData} options={chartOptions} height={250} />
-                </div>
-            </div>
+                <Col xs={24} lg={12}>
+                    <Card
+                        title={
+                            <div className="flex items-center gap-2">
+                                <Users className="text-blue-500" size={20} />
+                                <span>آمار سفارشات و مشتریان</span>
+                            </div>
+                        }
+                        className="shadow-lg border-0 h-full"
+                    >
+                        <div className="h-64">
+                            <Bar data={barChartData} options={chartOptions} />
+                        </div>
+                    </Card>
+                </Col>
+            </Row>
 
             {/* ردیف دوم */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                {/* نمودار دایره‌ای */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <PieChart className="text-purple-500" size={20} />
-                        توزیع درآمد محصولات
-                    </h3>
-                    <div className="h-64">
-                        <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
-                    </div>
-                </div>
-
-                {/* محصولات پرفروش */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <Crown className="text-yellow-500" size={20} />
-                        محصولات برتر
-                    </h3>
-                    <div className="space-y-4">
-                        {topProducts.map((product, index) => (
-                            <div key={product.name} className="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-green-50 transition-all">
-                                <div className="flex items-center gap-3">
-                                    <div className="relative">
-                                        <img
-                                            src={product.image}
-                                            alt={product.name}
-                                            className="w-12 h-12 rounded-lg object-cover"
-                                        />
-                                        <div className="absolute -top-2 -right-2 w-5 h-5 bg-yellow-500 text-white rounded-full text-xs flex items-center justify-center">
-                                            {index + 1}
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold text-gray-800">{product.name}</div>
-                                        <div className="text-sm text-gray-500">{product.sales} فروش</div>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <div className="font-bold text-green-600">{(product.revenue / 1000000).toFixed(1)}M</div>
-                                    <div className={`text-xs flex items-center gap-1 ${product.growth > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                        <TrendingUp size={12} />
-                                        {product.growth}%
-                                    </div>
-                                </div>
+            <Row gutter={[16, 16]} className="mb-6">
+                <Col xs={24} lg={8}>
+                    <Card
+                        title={
+                            <div className="flex items-center gap-2">
+                                <PieChart className="text-purple-500" size={20} />
+                                <span>توزیع درآمد محصولات</span>
                             </div>
-                        ))}
-                    </div>
-                </div>
+                        }
+                        className="shadow-lg border-0 h-full"
+                    >
+                        <div className="h-64">
+                            <Pie data={pieChartData} options={chartOptions} />
+                        </div>
+                    </Card>
+                </Col>
 
-                {/* تحلیل تأمین‌کنندگان */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                        <Sparkles className="text-blue-500" size={20} />
-                        تأمین‌کنندگان برتر
-                    </h3>
-                    <div className="space-y-4">
-                        {supplierAnalytics.map((supplier, index) => (
-                            <div key={supplier.name} className="p-3 border border-gray-100 rounded-xl hover:bg-blue-50 transition-all">
-                                <div className="flex items-center justify-between mb-2">
+                <Col xs={24} lg={8}>
+                    <Card
+                        title={
+                            <div className="flex items-center gap-2">
+                                <Crown className="text-yellow-500" size={20} />
+                                <span>محصولات برتر</span>
+                            </div>
+                        }
+                        className="shadow-lg border-0 h-full"
+                    >
+                        <div className="space-y-3 max-h-64 overflow-y-auto">
+                            {topProducts.map((product, index) => (
+                                <div key={product.name} className="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-green-50 transition-all">
                                     <div className="flex items-center gap-3">
-                                        <Avatar
-                                            size="large"
-                                            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold"
-                                        >
-                                            {supplier.name.charAt(0)}
-                                        </Avatar>
-                                        <div>
-                                            <div className="font-semibold text-gray-800">{supplier.name}</div>
-                                            <Rate
-                                                disabled
-                                                defaultValue={supplier.rating}
-                                                className="text-yellow-500 text-sm"
-                                                character={<Star size={12} />}
+                                        <div className="relative">
+                                            <img
+                                                src={product.image}
+                                                alt={product.name}
+                                                className="w-10 h-10 rounded-lg object-cover"
                                             />
+                                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 text-white rounded-full text-xs flex items-center justify-center">
+                                                {index + 1}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="font-semibold text-gray-800 text-sm">{product.name}</div>
+                                            <div className="text-xs text-gray-500">{product.sales} فروش</div>
                                         </div>
                                     </div>
-                                    <Badge count={`${index + 1}`} className="bg-gradient-to-r from-yellow-400 to-orange-500" />
-                                </div>
-                                <div className="grid grid-cols-3 gap-2 text-center">
-                                    <div>
-                                        <div className="text-sm text-gray-500">سفارشات</div>
-                                        <div className="font-bold text-purple-600">{supplier.orders}</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-sm text-gray-500">هزینه</div>
-                                        <div className="font-bold text-green-600">{(supplier.totalSpent / 1000000).toFixed(1)}M</div>
-                                    </div>
-                                    <div>
-                                        <div className="text-sm text-gray-500">تحویل</div>
-                                        <Progress
-                                            percent={supplier.deliveryScore}
-                                            size="small"
-                                            strokeColor={
-                                                supplier.deliveryScore > 90 ? '#10b981' :
-                                                    supplier.deliveryScore > 80 ? '#3b82f6' : '#f59e0b'
-                                            }
-                                        />
+                                    <div className="text-right">
+                                        <div className="font-bold text-green-600 text-sm">{(product.revenue / 1000000).toFixed(1)}M</div>
+                                        <div className={`text-xs flex items-center gap-1 ${product.growth > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                            {product.growth > 0 ? <TrendingUp size={10} /> : <TrendingDown size={10} />}
+                                            {product.growth}%
+                                        </div>
                                     </div>
                                 </div>
+                            ))}
+                        </div>
+                    </Card>
+                </Col>
+
+                <Col xs={24} lg={8}>
+                    <Card
+                        title={
+                            <div className="flex items-center gap-2">
+                                <Sparkles className="text-blue-500" size={20} />
+                                <span>تأمین‌کنندگان برتر</span>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
+                        }
+                        className="shadow-lg border-0 h-full"
+                    >
+                        <div className="space-y-3 max-h-64 overflow-y-auto">
+                            {supplierAnalytics.map((supplier, index) => (
+                                <div key={supplier.name} className="p-3 border border-gray-100 rounded-xl hover:bg-blue-50 transition-all">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <div className="flex items-center gap-2">
+                                            <Avatar
+                                                size="small"
+                                                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold"
+                                            >
+                                                {supplier.name.charAt(0)}
+                                            </Avatar>
+                                            <div>
+                                                <div className="font-semibold text-gray-800 text-sm">{supplier.name}</div>
+                                                <Rate
+                                                    disabled
+                                                    defaultValue={supplier.rating}
+                                                    className="text-yellow-500 text-xs"
+                                                    character={<Star size={10} />}
+                                                />
+                                            </div>
+                                        </div>
+                                        <Badge count={index + 1} style={{ backgroundColor: '#faad14' }} />
+                                    </div>
+                                    <Row gutter={8} className="text-center">
+                                        <Col span={8}>
+                                            <div className="text-xs text-gray-500">سفارشات</div>
+                                            <div className="font-bold text-purple-600 text-sm">{supplier.orders}</div>
+                                        </Col>
+                                        <Col span={8}>
+                                            <div className="text-xs text-gray-500">هزینه</div>
+                                            <div className="font-bold text-green-600 text-sm">{(supplier.totalSpent / 1000000).toFixed(1)}M</div>
+                                        </Col>
+                                        <Col span={8}>
+                                            <div className="text-xs text-gray-500">تحویل</div>
+                                            <Progress
+                                                percent={supplier.deliveryScore}
+                                                size="small"
+                                                strokeColor={
+                                                    supplier.deliveryScore > 90 ? '#52c41a' :
+                                                        supplier.deliveryScore > 80 ? '#1890ff' : '#faad14'
+                                                }
+                                                format={percent => `${percent}%`}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+                </Col>
+            </Row>
 
             {/* پیشنهادات هوشمند */}
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <Lightbulb className="text-yellow-500" size={20} />
-                    پیشنهادات هوشمند
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-100 rounded-xl border border-green-200">
-                        <div className="flex items-center gap-3 mb-2">
-                            <Target className="text-green-600" size={20} />
-                            <span className="font-semibold text-green-800">بهینه‌سازی هزینه</span>
-                        </div>
-                        <p className="text-sm text-green-700">
-                            کاهش ۱۵٪ هزینه‌های خرید از تأمین‌کنندگان با امتیاز پایین
-                        </p>
+            <Card
+                title={
+                    <div className="flex items-center gap-2">
+                        <Lightbulb className="text-yellow-500" size={20} />
+                        <span>پیشنهادات هوشمند</span>
                     </div>
-                    <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-100 rounded-xl border border-blue-200">
-                        <div className="flex items-center gap-3 mb-2">
-                            <TrendingUp className="text-blue-600" size={20} />
-                            <span className="font-semibold text-blue-800">افزایش فروش</span>
+                }
+                className="shadow-lg border-0"
+            >
+                <Row gutter={[16, 16]}>
+                    <Col xs={24} md={8}>
+                        <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-100 rounded-xl border border-green-200 h-full">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Target className="text-green-600" size={20} />
+                                <span className="font-semibold text-green-800">بهینه‌سازی هزینه</span>
+                            </div>
+                            <p className="text-sm text-green-700">
+                                کاهش ۱۵٪ هزینه‌های خرید از تأمین‌کنندگان با امتیاز پایین
+                            </p>
                         </div>
-                        <p className="text-sm text-blue-700">
-                            تمرکز بر محصولات پرفروش برای افزایش ۲۵٪ درآمد
-                        </p>
-                    </div>
-                    <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-100 rounded-xl border border-purple-200">
-                        <div className="flex items-center gap-3 mb-2">
-                            <Clock className="text-purple-600" size={20} />
-                            <span className="font-semibold text-purple-800">مدیریت زمان</span>
+                    </Col>
+                    <Col xs={24} md={8}>
+                        <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-100 rounded-xl border border-blue-200 h-full">
+                            <div className="flex items-center gap-3 mb-2">
+                                <TrendingUp className="text-blue-600" size={20} />
+                                <span className="font-semibold text-blue-800">افزایش فروش</span>
+                            </div>
+                            <p className="text-sm text-blue-700">
+                                تمرکز بر محصولات پرفروش برای افزایش ۲۵٪ درآمد
+                            </p>
                         </div>
-                        <p className="text-sm text-purple-700">
-                            بهبود زنجیره تأمین برای کاهش ۳۰٪ زمان تحویل
-                        </p>
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                    <Col xs={24} md={8}>
+                        <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-100 rounded-xl border border-purple-200 h-full">
+                            <div className="flex items-center gap-3 mb-2">
+                                <Clock className="text-purple-600" size={20} />
+                                <span className="font-semibold text-purple-800">مدیریت زمان</span>
+                            </div>
+                            <p className="text-sm text-purple-700">
+                                بهبود زنجیره تأمین برای کاهش ۳۰٪ زمان تحویل
+                            </p>
+                        </div>
+                    </Col>
+                </Row>
+            </Card>
         </div>
     );
 };

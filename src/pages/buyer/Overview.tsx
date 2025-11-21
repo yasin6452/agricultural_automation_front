@@ -1,365 +1,315 @@
-import { useState } from "react";
-import { ShoppingCart, Heart, Bell, BarChart3, TrendingUp, Package, Users, Target, Clock, MapPin, Star, Eye, MessageCircle } from "lucide-react";
-import { Badge, Progress, Card, Avatar } from "antd";
+import { useState, useEffect } from "react";
+import {
+    TrendingUp,
+    TrendingDown,
+    DollarSign,
+    ShoppingCart,
+    Package,
+    Users,
+    BarChart3,
+    Target,
+    Calendar,
+    Star,
+    MapPin,
+    Clock,
+    CheckCircle,
+    XCircle,
+    AlertCircle
+} from "lucide-react";
+import { Card, Statistic, Progress, Tag, Table, Badge, Row, Col, List, Avatar } from "antd";
 
 interface Order {
-    id: number;
+    id: string;
     product: string;
-    seller: string;
-    status: 'pending' | 'shipped' | 'delivered';
+    supplier: string;
     amount: number;
+    status: 'pending' | 'completed' | 'cancelled';
     date: string;
-    progress: number;
 }
 
-interface Activity {
-    id: number;
-    type: 'order' | 'save' | 'view' | 'message';
+interface Product {
+    name: string;
+    sales: number;
+    growth: number;
+    image: string;
+}
+
+interface StatCard {
     title: string;
-    description: string;
-    time: string;
-    icon: any;
+    value: string | number;
+    change: number;
+    icon: React.ReactNode;
     color: string;
 }
 
-export default function BuyerOverview() {
-    const [stats] = useState({
-        activeOrders: 3,
-        savedAds: 12,
-        alerts: 4,
-        aiReports: 2,
-        totalSpent: 12500000,
-        completedOrders: 45,
-        successRate: 96,
-        favoriteSuppliers: 8
-    });
+export default function Overview() {
+    const [isDark, setIsDark] = useState(false);
 
-    const [recentOrders] = useState<Order[]>([
-        {
-            id: 1,
-            product: "سیب قرمز ممتاز",
-            seller: "مزرعه سبز",
-            status: 'shipped',
-            amount: 2400000,
-            date: "1402/10/15",
-            progress: 75
-        },
-        {
-            id: 2,
-            product: "برنج طارم هاشمی",
-            seller: "شالیزار شمال",
-            status: 'pending',
-            amount: 4500000,
-            date: "1402/10/14",
-            progress: 25
-        },
-        {
-            id: 3,
-            product: "گوجه فرنگی گلخانه‌ای",
-            seller: "کشاورز نمونه",
-            status: 'delivered',
-            amount: 1200000,
-            date: "1402/10/13",
-            progress: 100
-        }
-    ]);
+    // داده‌های نمونه
+    const orders: Order[] = [
+        { id: 'ORD-001', product: 'سیب قرمز', supplier: 'مزرعه سبز', amount: 2500000, status: 'completed', date: '1402/09/15' },
+        { id: 'ORD-002', product: 'برنج محلی', supplier: 'شالیزار شمال', amount: 4800000, status: 'pending', date: '1402/09/16' },
+        { id: 'ORD-003', product: 'گوجه فرنگی', supplier: 'کشاورز نمونه', amount: 1200000, status: 'completed', date: '1402/09/14' },
+        { id: 'ORD-004', product: 'هویج تازه', supplier: 'باغ مرکبات', amount: 850000, status: 'cancelled', date: '1402/09/13' },
+        { id: 'ORD-005', product: 'پرتقال شمال', supplier: 'مزرعه سبز', amount: 3200000, status: 'pending', date: '1402/09/17' },
+    ];
 
-    const [activities] = useState<Activity[]>([
-        {
-            id: 1,
-            type: 'order',
-            title: "سفارش جدید",
-            description: "خرید ۲۰ کیلو سیب از «مزرعه سبز»",
-            time: "2 ساعت پیش",
-            icon: ShoppingCart,
-            color: "text-green-500"
-        },
-        {
-            id: 2,
-            type: 'save',
-            title: "ذخیره آگهی",
-            description: "ذخیره آگهی «گوجه فرنگی ارگانیک»",
-            time: "4 ساعت پیش",
-            icon: Heart,
-            color: "text-red-500"
-        },
-        {
-            id: 3,
-            type: 'view',
-            title: "تحلیل هوشمند",
-            description: "مشاهده گزارش AI: «تحلیل قیمت سیب»",
-            time: "1 روز پیش",
-            icon: BarChart3,
-            color: "text-blue-500"
-        },
-        {
-            id: 4,
-            type: 'message',
-            title: "پیام جدید",
-            description: "ارسال پیام به فروشنده «باغ البرز»",
-            time: "1 روز پیش",
-            icon: MessageCircle,
-            color: "text-purple-500"
-        }
-    ]);
+    const topProducts: Product[] = [
+        { name: 'سیب قرمز', sales: 45, growth: 12, image: '🍎' },
+        { name: 'برنج محلی', sales: 38, growth: 8, image: '🍚' },
+        { name: 'گوجه فرنگی', sales: 52, growth: 25, image: '🍅' },
+        { name: 'هویج تازه', sales: 29, growth: -5, image: '🥕' },
+        { name: 'پرتقال شمال', sales: 41, growth: 18, image: '🍊' },
+    ];
 
-    const getStatusColor = (status: string) => {
+    const stats: StatCard[] = [
+        {
+            title: 'کل خریدها',
+            value: '۱۲,۴۵۰,۰۰۰',
+            change: 15,
+            icon: <ShoppingCart className="text-blue-500" size={24} />,
+            color: 'blue'
+        },
+        {
+            title: 'سفارشات فعال',
+            value: 8,
+            change: 5,
+            icon: <Package className="text-green-500" size={24} />,
+            color: 'green'
+        },
+        {
+            title: 'تأمین‌کنندگان',
+            value: 12,
+            change: 2,
+            icon: <Users className="text-purple-500" size={24} />,
+            color: 'purple'
+        },
+        {
+            title: 'میانگین امتیاز',
+            value: '۴.۸',
+            change: 0.2,
+            icon: <Star className="text-yellow-500" size={24} />,
+            color: 'yellow'
+        },
+    ];
+
+    const getStatusColor = (status: Order['status']) => {
         switch (status) {
-            case 'pending': return 'bg-yellow-100 text-yellow-700';
-            case 'shipped': return 'bg-blue-100 text-blue-700';
-            case 'delivered': return 'bg-green-100 text-green-700';
-            default: return 'bg-gray-100 text-gray-700';
+            case 'completed': return 'success';
+            case 'pending': return 'processing';
+            case 'cancelled': return 'error';
+            default: return 'default';
         }
     };
 
-    const getStatusText = (status: string) => {
+    const getStatusIcon = (status: Order['status']) => {
         switch (status) {
-            case 'pending': return 'در انتظار';
-            case 'shipped': return 'ارسال شده';
-            case 'delivered': return 'تحویل شده';
-            default: return 'نامشخص';
+            case 'completed': return <CheckCircle className="text-green-500" size={16} />;
+            case 'pending': return <Clock className="text-orange-500" size={16} />;
+            case 'cancelled': return <XCircle className="text-red-500" size={16} />;
+            default: return <AlertCircle size={16} />;
         }
     };
+
+    const columns = [
+        {
+            title: 'شماره سفارش',
+            dataIndex: 'id',
+            key: 'id',
+        },
+        {
+            title: 'محصول',
+            dataIndex: 'product',
+            key: 'product',
+        },
+        {
+            title: 'تأمین‌کننده',
+            dataIndex: 'supplier',
+            key: 'supplier',
+        },
+        {
+            title: 'مبلغ (تومان)',
+            dataIndex: 'amount',
+            key: 'amount',
+            render: (amount: number) => amount.toLocaleString('fa-IR'),
+        },
+        {
+            title: 'وضعیت',
+            dataIndex: 'status',
+            key: 'status',
+            render: (status: Order['status']) => (
+                <Badge
+                    status={getStatusColor(status)}
+                    text={
+                        <span className="flex items-center gap-1">
+                            {getStatusIcon(status)}
+                            {status === 'completed' && 'تکمیل شده'}
+                            {status === 'pending' && 'در انتظار'}
+                            {status === 'cancelled' && 'لغو شده'}
+                        </span>
+                    }
+                />
+            ),
+        },
+        {
+            title: 'تاریخ',
+            dataIndex: 'date',
+            key: 'date',
+        },
+    ];
+
+    const totalSpent = orders.reduce((sum, order) => sum + order.amount, 0);
+    const completedOrders = orders.filter(order => order.status === 'completed').length;
+    const successRate = (completedOrders / orders.length) * 100;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6 font-[IRANSans]">
-            <div className="max-w-7xl mx-auto">
-                {/* هدر */}
-                <div className="mb-8">
-                    <div className="flex items-center justify-between mb-6">
-                        <div>
-                            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-                                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
-                                    <Target className="text-white" size={24} />
-                                </div>
-                                نمای کلی خریدار
-                            </h1>
-                            <p className="text-gray-600 mt-2">خلاصه فعالیت‌ها و آمار عملکرد شما</p>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                            <div className="bg-white p-4 rounded-2xl shadow-sm border border-green-100">
-                                <div className="text-xs text-gray-500">سفارشات تکمیل شده</div>
-                                <div className="text-xl font-bold text-gray-800">{stats.completedOrders}</div>
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 font-[IRANSans]">
+            {/* هدر */}
+            <div className="mb-8">
+                <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
+                    <div>
+                        <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-3">
+                            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                                <BarChart3 className="text-white" size={20} />
                             </div>
-                            <div className="bg-white p-4 rounded-2xl shadow-sm border border-green-100">
-                                <div className="text-xs text-gray-500">میزان موفقیت</div>
-                                <div className="text-xl font-bold text-green-600">{stats.successRate}%</div>
-                            </div>
-                        </div>
+                            نمای کلی خریدار
+                        </h1>
+                        <p className="text-gray-600 mt-2">خلاصه فعالیت‌ها و آمار خریدهای شما</p>
                     </div>
 
-                    {/* کارت‌های آماری */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                        <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm text-gray-500">سفارشات فعال</div>
-                                    <div className="text-lg font-bold text-gray-800">{stats.activeOrders}</div>
-                                    <div className="text-xs text-green-500 flex items-center gap-1 mt-1">
-                                        <TrendingUp size={12} />
-                                        +2 از ماه گذشته
-                                    </div>
-                                </div>
-                                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                                    <ShoppingCart className="text-green-600" size={24} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm text-gray-500">آگهی‌های ذخیره‌شده</div>
-                                    <div className="text-lg font-bold text-gray-800">{stats.savedAds}</div>
-                                    <div className="text-xs text-red-500 flex items-center gap-1 mt-1">
-                                        <Heart size={12} />
-                                        مورد علاقه
-                                    </div>
-                                </div>
-                                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                                    <Heart className="text-red-600" size={24} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm text-gray-500">اعلان‌ها</div>
-                                    <div className="text-lg font-bold text-gray-800">{stats.alerts}</div>
-                                    <div className="text-xs text-yellow-500 flex items-center gap-1 mt-1">
-                                        <Bell size={12} />
-                                        نیاز به توجه
-                                    </div>
-                                </div>
-                                <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
-                                    <Bell className="text-yellow-600" size={24} />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <div className="text-sm text-gray-500">تحلیل‌های هوشمند</div>
-                                    <div className="text-lg font-bold text-gray-800">{stats.aiReports}</div>
-                                    <div className="text-xs text-blue-500 flex items-center gap-1 mt-1">
-                                        <BarChart3 size={12} />
-                                        جدید
-                                    </div>
-                                </div>
-                                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                                    <BarChart3 className="text-blue-600" size={24} />
-                                </div>
-                            </div>
+                    <div className="flex items-center gap-3">
+                        <div className="bg-white px-4 py-2 rounded-xl shadow-sm border border-gray-200">
+                            <div className="text-xs text-gray-500">موجودی</div>
+                            <div className="text-lg font-bold text-green-600">۵,۲۴۰,۰۰۰ تومان</div>
                         </div>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* سفارشات اخیر */}
-                    <div className="bg-white rounded-2xl shadow-lg border border-green-100 overflow-hidden">
-                        <div className="p-6 border-b border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                <Package className="text-green-500" />
-                                سفارشات اخیر
-                            </h2>
-                        </div>
+                {/* کارت‌های آماری */}
+                <Row gutter={[16, 16]}>
+                    {stats.map((stat, index) => (
+                        <Col key={index} xs={24} sm={12} lg={6}>
+                            <Card className="shadow-lg border-0 h-full hover:shadow-xl transition-all duration-300">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <div className="text-sm text-gray-500 mb-2">{stat.title}</div>
+                                        <div className="text-2xl font-bold text-gray-800 mb-1">{stat.value}</div>
+                                        <div className={`text-xs flex items-center gap-1 ${stat.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                            {stat.change >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                                            {Math.abs(stat.change)}%
+                                        </div>
+                                    </div>
+                                    <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                                        {stat.icon}
+                                    </div>
+                                </div>
+                            </Card>
+                        </Col>
+                    ))}
+                </Row>
+            </div>
 
-                        <div className="p-6 space-y-4">
-                            {recentOrders.map((order) => (
-                                <div key={order.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-green-300 transition-all">
-                                    <div className="flex items-center gap-3">
-                                        <Avatar
-                                            size="large"
-                                            className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold"
-                                        >
-                                            {order.product.charAt(0)}
-                                        </Avatar>
-                                        <div>
-                                            <div className="font-semibold text-gray-800">{order.product}</div>
-                                            <div className="text-sm text-gray-500 flex items-center gap-2">
-                                                <span>{order.seller}</span>
-                                                <span>•</span>
-                                                <span>{order.date}</span>
+            {/* محتوای اصلی */}
+            <Row gutter={[24, 24]}>
+                {/* سفارشات اخیر */}
+                <Col xs={24} lg={16}>
+                    <Card
+                        title={
+                            <div className="flex items-center gap-2">
+                                <ShoppingCart className="text-blue-500" size={20} />
+                                <span>سفارشات اخیر</span>
+                            </div>
+                        }
+                        className="shadow-lg border-0"
+                        extra={
+                            <Tag color="blue" className="text-sm">
+                                {orders.length} سفارش
+                            </Tag>
+                        }
+                    >
+                        <Table
+                            dataSource={orders}
+                            columns={columns}
+                            pagination={false}
+                            size="middle"
+                            className="overflow-x-auto"
+                        />
+                    </Card>
+                </Col>
+
+                {/* سایدبار */}
+                <Col xs={24} lg={8}>
+                    <div className="space-y-6">
+                        {/* محصولات پرفروش */}
+                        <Card
+                            title={
+                                <div className="flex items-center gap-2">
+                                    <TrendingUp className="text-green-500" size={20} />
+                                    <span>محصولات پرفروش</span>
+                                </div>
+                            }
+                            className="shadow-lg border-0"
+                        >
+                            <List
+                                dataSource={topProducts}
+                                renderItem={(product, index) => (
+                                    <List.Item className="border-0 px-0 py-3">
+                                        <div className="flex items-center justify-between w-full">
+                                            <div className="flex items-center gap-3">
+                                                <div className="text-2xl">{product.image}</div>
+                                                <div>
+                                                    <div className="font-semibold text-gray-800">{product.name}</div>
+                                                    <div className="text-sm text-gray-500">{product.sales} فروش</div>
+                                                </div>
+                                            </div>
+                                            <div className={`text-sm font-bold ${product.growth >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                                {product.growth >= 0 ? '+' : ''}{product.growth}%
                                             </div>
                                         </div>
-                                    </div>
+                                    </List.Item>
+                                )}
+                            />
+                        </Card>
 
-                                    <div className="text-right">
-                                        <div className="font-bold text-green-600">{order.amount.toLocaleString()} تومان</div>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <Badge
-                                                className={getStatusColor(order.status)}
-                                                count={getStatusText(order.status)}
-                                            />
-                                            <Progress
-                                                percent={order.progress}
-                                                size="small"
-                                                strokeColor={
-                                                    order.progress === 100 ? '#10b981' :
-                                                        order.progress > 50 ? '#3b82f6' : '#f59e0b'
-                                                }
-                                                style={{ width: '60px' }}
-                                            />
-                                        </div>
-                                    </div>
+                        {/* آمار کلی */}
+                        <Card
+                            title={
+                                <div className="flex items-center gap-2">
+                                    <Target className="text-purple-500" size={20} />
+                                    <span>آمار عملکرد</span>
                                 </div>
-                            ))}
-
-                            <button className="w-full flex items-center justify-center gap-2 py-3 border border-dashed border-gray-300 rounded-xl text-gray-500 hover:text-green-600 hover:border-green-300 transition-all">
-                                <Eye size={16} />
-                                مشاهده همه سفارشات
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* فعالیت‌های اخیر */}
-                    <div className="bg-white rounded-2xl shadow-lg border border-green-100 overflow-hidden">
-                        <div className="p-6 border-b border-gray-100">
-                            <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                                <Clock className="text-blue-500" />
-                                فعالیت‌های اخیر
-                            </h2>
-                        </div>
-
-                        <div className="p-6 space-y-4">
-                            {activities.map((activity) => (
-                                <div key={activity.id} className="flex items-start gap-3 p-3 border border-gray-200 rounded-xl hover:border-green-300 transition-all">
-                                    <div className={`p-2 rounded-lg ${activity.color.replace('text', 'bg')} bg-opacity-10`}>
-                                        <activity.icon size={16} className={activity.color} />
+                            }
+                            className="shadow-lg border-0"
+                        >
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                                        <span>کل هزینه‌ها</span>
+                                        <span className="font-bold">{(totalSpent / 1000000).toFixed(1)} میلیون تومان</span>
                                     </div>
-                                    <div className="flex-1">
-                                        <div className="font-semibold text-gray-800">{activity.title}</div>
-                                        <div className="text-sm text-gray-600">{activity.description}</div>
-                                        <div className="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                                            <Clock size={12} />
-                                            {activity.time}
-                                        </div>
-                                    </div>
+                                    <Progress percent={75} strokeColor="#10b981" />
                                 </div>
-                            ))}
 
-                            <button className="w-full flex items-center justify-center gap-2 py-3 border border-dashed border-gray-300 rounded-xl text-gray-500 hover:text-green-600 hover:border-green-300 transition-all">
-                                <BarChart3 size={16} />
-                                مشاهده گزارش کامل
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                                <div>
+                                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                                        <span>نرخ موفقیت سفارشات</span>
+                                        <span className="font-bold">{successRate.toFixed(0)}%</span>
+                                    </div>
+                                    <Progress percent={successRate} strokeColor="#3b82f6" />
+                                </div>
 
-                {/* آمار پایین */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <div className="text-sm text-gray-500">کل هزینه‌ها</div>
-                                <div className="text-2xl font-bold text-green-600">{(stats.totalSpent / 1000000).toFixed(1)}M</div>
+                                <div>
+                                    <div className="flex justify-between text-sm text-gray-600 mb-2">
+                                        <span>رضایت از تأمین‌کنندگان</span>
+                                        <span className="font-bold">۹۴%</span>
+                                    </div>
+                                    <Progress percent={94} strokeColor="#f59e0b" />
+                                </div>
                             </div>
-                            <TrendingUp className="text-green-500" size={24} />
-                        </div>
-                        <Progress
-                            percent={75}
-                            strokeColor="#10b981"
-                            showInfo={false}
-                        />
-                        <div className="text-xs text-gray-500 mt-2">+15% نسبت به ماه گذشته</div>
+                        </Card>
                     </div>
-
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <div className="text-sm text-gray-500">تأمین‌کنندگان مورد علاقه</div>
-                                <div className="text-2xl font-bold text-purple-600">{stats.favoriteSuppliers}</div>
-                            </div>
-                            <Users className="text-purple-500" size={24} />
-                        </div>
-                        <Progress
-                            percent={60}
-                            strokeColor="#8b5cf6"
-                            showInfo={false}
-                        />
-                        <div className="text-xs text-gray-500 mt-2">+5 مورد جدید</div>
-                    </div>
-
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100">
-                        <div className="flex items-center justify-between mb-4">
-                            <div>
-                                <div className="text-sm text-gray-500">میانگین امتیاز</div>
-                                <div className="text-2xl font-bold text-yellow-600">4.8</div>
-                            </div>
-                            <Star className="text-yellow-500 fill-current" size={24} />
-                        </div>
-                        <Progress
-                            percent={96}
-                            strokeColor="#f59e0b"
-                            showInfo={false}
-                        />
-                        <div className="text-xs text-gray-500 mt-2">از ۵.۰ امتیاز</div>
-                    </div>
-                </div>
-            </div>
+                </Col>
+            </Row>
         </div>
     );
 }
