@@ -38,6 +38,16 @@ import  Bayer_Messages  from "./pages/buyer/Bayer_Messages";
 import Buyer_Settings from "./pages/buyer/Buyer_Settings";
 
 
+import ServicesLayout from "./pages/services/ServicesLayout";
+import ServicesDashboard from "./pages/services/ServicesDashboard";
+import ManageServices from "./pages/services/ManageServices";
+import ServiceRequests from "./pages/services/ServiceRequests";
+import ServicesMessages from "./pages/services/ServicesMessages";
+import ServicesAnalytics from "./pages/services/ServicesAnalytics";
+import ServicesSettings from "./pages/services/ServicesMessages";
+
+
+
 // استایل مپ
 import 'leaflet/dist/leaflet.css';
 
@@ -112,7 +122,19 @@ function App() {
               <Route path="PriceComparison" element={<PriceComparison />} />
 
             </Route>
-            
+                {/* ریدایرکت به داشبورد */}
+                <Route path="/" element={<Navigate to="/services/dashboard" />} />
+
+                {/* پنل خدمات */}
+                <Route path="/services" element={<ServicesLayout />}>
+                  <Route path="dashboard" element={<ServicesDashboard />} />
+                  <Route path="manage" element={<ManageServices />} />
+                  <Route path="requests" element={<ServiceRequests />} />
+                  <Route path="messages" element={<ServicesMessages />} />
+                  <Route path="analytics" element={<ServicesAnalytics />} />
+                  <Route path="settings" element={<ServicesSettings />} />
+                </Route>
+
     
 
             {/* Redirect پیش‌فرض */}

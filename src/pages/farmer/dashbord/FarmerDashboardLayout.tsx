@@ -36,7 +36,7 @@
             icon: <Sprout size={20} />,
             color: "#22c55e",
             children: [
-                { key: "/farmer/dashboard/products", label: "محصولات من", icon: <Package size={18} /> },
+                { key: "/farmer/dashboard/products", label: "غرفه من", icon: <Package size={18} /> },
                 { key: "/farmer/dashboard/rates", label: "نرخ‌های بازار", icon: <TrendingUp size={18} /> },
             ]
         },
@@ -52,12 +52,7 @@
             icon: <MessageCircle size={20} />,
             color: "#3b82f6",
         },
-        {
-            key: "/farmer/dashboard/lab-tests",
-            label: "آزمایشگاه",
-            icon: <FlaskConical size={20} />,
-            color: "#f59e0b"
-        },
+       
         {
             key: "/farmer/dashboard/messages",
             label: "پیام‌ها",
