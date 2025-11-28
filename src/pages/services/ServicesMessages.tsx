@@ -1,5 +1,5 @@
 // src/pages/services/ServicesMessages.tsx
-import { useState } from "react";
+import React, { useState } from "react";
 import {
     MessageCircle,
     Search,
@@ -11,7 +11,7 @@ import {
     Clock,
     CheckCircle2
 } from "lucide-react";
-import { Card, Input, Avatar, Badge, Button, Modal, Dropdown, Tag, Empty, Select } from "antd";
+import { Card, Input, Avatar, Badge, Button, Modal, Dropdown, Select, Space } from "antd";
 import type { MenuProps } from "antd";
 
 const { Search: SearchInput } = Input;
@@ -50,7 +50,7 @@ export default function ServicesMessages() {
         {
             id: 1,
             farmerName: "علی رضایی",
-            farmerAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+            farmerAvatar: "https://i.pravatar.cc/150?img=1",
             serviceType: "سم‌پاشی باغ سیب",
             projectId: 101,
             lastMessage: "سلام، چه زمانی می‌تونید برای سم‌پاشی تشریف بیارید؟",
@@ -100,7 +100,7 @@ export default function ServicesMessages() {
         {
             id: 2,
             farmerName: "زهرا احمدی",
-            farmerAvatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
+            farmerAvatar: "https://i.pravatar.cc/150?img=2",
             serviceType: "نصب سیستم آبیاری",
             projectId: 102,
             lastMessage: "پیشنهاد قیمت شما رو بررسی کردیم و قبول کردیم",
@@ -136,7 +136,7 @@ export default function ServicesMessages() {
         {
             id: 3,
             farmerName: "محمد کریمی",
-            farmerAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+            farmerAvatar: "https://i.pravatar.cc/150?img=3",
             serviceType: "هرس درختان هلو",
             projectId: 103,
             lastMessage: "برای شنبه ساعت ۹ صبح هماهنگ کردم",
@@ -172,7 +172,7 @@ export default function ServicesMessages() {
         {
             id: 4,
             farmerName: "فاطمه محمدی",
-            farmerAvatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
+            farmerAvatar: "https://i.pravatar.cc/150?img=4",
             serviceType: "آنالیز خاک مزرعه گندم",
             projectId: 104,
             lastMessage: "نمونه خاک رو فردا میارم دفترتون",
@@ -202,10 +202,10 @@ export default function ServicesMessages() {
 
     const getStatusColor = (status: string) => {
         switch (status) {
-            case 'pending': return 'bg-yellow-100 text-yellow-700 border-yellow-300 dark:bg-yellow-900/50 dark:text-yellow-300';
-            case 'active': return 'bg-blue-100 text-blue-700 border-blue-300 dark:bg-blue-900/50 dark:text-blue-300';
-            case 'completed': return 'bg-green-100 text-green-700 border-green-300 dark:bg-green-900/50 dark:text-green-300';
-            default: return 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
+            case 'pending': return 'bg-yellow-100 text-yellow-700 border-yellow-300';
+            case 'active': return 'bg-blue-100 text-blue-700 border-blue-300';
+            case 'completed': return 'bg-green-100 text-green-700 border-green-300';
+            default: return 'bg-gray-100 text-gray-700';
         }
     };
 
@@ -271,50 +271,49 @@ export default function ServicesMessages() {
         setMessageInput("");
     };
 
-    const cardClass = "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-lg";
-    const textClass = "text-gray-600 dark:text-gray-300";
-    const titleClass = "text-gray-800 dark:text-white";
+    const cardClass = "bg-white border border-gray-200 rounded-2xl shadow-lg";
+    const textClass = "text-gray-600";
+    const titleClass = "text-gray-800";
 
     const createMenuItems = (conversation: Conversation): MenuProps['items'] => [
         {
             key: 'call',
             label: 'تماس تلفنی',
-            icon: <Phone size={14} />,
+            icon: React.createElement(Phone, { size: 14 }),
             onClick: () => console.log('Call:', conversation.contactNumber)
         },
         {
             key: 'viewProject',
             label: 'مشاهده پروژه',
-            icon: <User size={14} />,
+            icon: React.createElement(User, { size: 14 }),
             onClick: () => console.log('View project:', conversation.projectId)
         },
         {
             key: 'markCompleted',
             label: 'علامت به عنوان تکمیل شده',
-            icon: <CheckCircle2 size={14} />,
+            icon: React.createElement(CheckCircle2, { size: 14 }),
             onClick: () => console.log('Mark completed:', conversation.id)
         },
     ];
 
-    // تابع برای جلوگیری از باز شدن چت هنگام کلیک روی منو
     const handleDropdownClick = (e: React.MouseEvent) => {
         e.stopPropagation();
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 font-[IRANSans] transition-colors duration-300">
+        <div className="min-h-screen bg-gray-50 p-6 font-[IRANSans]">
             <div className="max-w-7xl mx-auto">
                 {/* هدر */}
                 <div className="mb-8">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-800 dark:text-white flex items-center gap-3">
+                            <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
                                 <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-lg shadow-orange-500/20">
                                     <MessageCircle className="text-white" size={24} />
                                 </div>
                                 پیام‌های خدمات
                             </h1>
-                            <p className="text-gray-600 dark:text-gray-300 mt-2">
+                            <p className="text-gray-600 mt-2">
                                 مدیریت مکالمات با کشاورزان و مشتریان
                             </p>
                         </div>
@@ -403,9 +402,9 @@ export default function ServicesMessages() {
 
                 {/* لیست مکالمات */}
                 <div className={`overflow-hidden ${cardClass}`}>
-                    <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+                    <div className="p-6 border-b border-gray-200">
                         <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+                            <h2 className="text-xl font-bold text-gray-800">
                                 مکالمات ({filteredConversations.length})
                             </h2>
                             <Badge
@@ -423,8 +422,8 @@ export default function ServicesMessages() {
                                     <div
                                         key={conversation.id}
                                         className={`border rounded-xl p-4 transition-all hover:shadow-md cursor-pointer ${conversation.unreadCount > 0
-                                                ? 'border-orange-200 dark:border-orange-700 bg-orange-50 dark:bg-orange-900/20'
-                                                : 'border-gray-200 dark:border-gray-700 hover:border-orange-300 dark:hover:border-orange-500'
+                                            ? 'border-orange-200 bg-orange-50'
+                                            : 'border-gray-200 hover:border-orange-300'
                                             }`}
                                         onClick={() => handleOpenChat(conversation)}
                                     >
@@ -434,25 +433,25 @@ export default function ServicesMessages() {
                                                     <Avatar
                                                         src={conversation.farmerAvatar}
                                                         size={50}
-                                                        className="border-2 border-orange-200 dark:border-orange-700"
+                                                        className="border-2 border-orange-200"
                                                     />
                                                     {conversation.online && (
-                                                        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-gray-800"></div>
+                                                        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
                                                     )}
                                                 </div>
                                                 <div className="flex-1">
                                                     <div className="flex items-start justify-between mb-2">
                                                         <div>
-                                                            <h3 className="font-bold text-gray-800 dark:text-white text-lg">
+                                                            <h3 className="font-bold text-gray-800 text-lg">
                                                                 {conversation.farmerName}
                                                             </h3>
-                                                            <p className="text-orange-600 dark:text-orange-400 text-sm">
+                                                            <p className="text-orange-600 text-sm">
                                                                 {conversation.serviceType}
                                                             </p>
                                                         </div>
                                                         <div className="flex items-center gap-2">
                                                             <Badge
-                                                                className={`${getStatusColor(conversation.status)} flex items-center gap-1`}
+                                                                className={`${getStatusColor(conversation.status)} flex items-center gap-1 px-2 py-1 rounded-full text-xs border`}
                                                                 count={
                                                                     <div className="flex items-center gap-1">
                                                                         {getStatusIcon(conversation.status)}
@@ -476,11 +475,11 @@ export default function ServicesMessages() {
                                                         </div>
                                                     </div>
 
-                                                    <p className="text-gray-600 dark:text-gray-300 text-sm mb-2 line-clamp-2">
+                                                    <p className="text-gray-600 text-sm mb-2 line-clamp-2">
                                                         {conversation.lastMessage}
                                                     </p>
 
-                                                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                                                    <div className="flex items-center justify-between text-sm text-gray-500">
                                                         <div className="flex items-center gap-4">
                                                             <div className="flex items-center gap-1">
                                                                 <Phone size={12} />
@@ -506,10 +505,10 @@ export default function ServicesMessages() {
                             </div>
                         ) : (
                             <div className="text-center py-12">
-                                <div className="text-gray-400 dark:text-gray-500 text-lg mb-2">
+                                <div className="text-gray-400 text-lg mb-2">
                                     هیچ مکالمه‌ای یافت نشد
                                 </div>
-                                <div className="text-gray-500 dark:text-gray-400 text-sm">
+                                <div className="text-gray-500 text-sm">
                                     سعی کنید فیلترها را تغییر دهید یا عبارت جستجوی دیگری وارد کنید
                                 </div>
                             </div>
@@ -534,10 +533,10 @@ export default function ServicesMessages() {
                                         )}
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-800 dark:text-white">
+                                        <h3 className="font-bold text-gray-800">
                                             {selectedConversation.farmerName}
                                         </h3>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                        <p className="text-sm text-gray-500">
                                             {selectedConversation.serviceType}
                                         </p>
                                     </div>
@@ -555,7 +554,7 @@ export default function ServicesMessages() {
                                         className="text-blue-500 hover:text-blue-600"
                                     />
                                     <Badge
-                                        className={getStatusColor(selectedConversation.status)}
+                                        className={`${getStatusColor(selectedConversation.status)} px-2 py-1 rounded-full text-xs border`}
                                         count={getStatusText(selectedConversation.status)}
                                     />
                                 </div>
@@ -567,12 +566,16 @@ export default function ServicesMessages() {
                     footer={null}
                     width={700}
                     style={{ top: 20 }}
-                    bodyStyle={{ padding: 0 }}
+                    styles={{
+                        body: {
+                            padding: 0
+                        }
+                    }}
                 >
                     {selectedConversation && (
                         <div className="flex flex-col h-[500px]">
                             {/* پیام‌ها */}
-                            <div className="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900 space-y-4">
+                            <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4">
                                 {selectedConversation.messages.map((msg) => (
                                     <div
                                         key={msg.id}
@@ -580,8 +583,8 @@ export default function ServicesMessages() {
                                     >
                                         <div
                                             className={`max-w-[80%] rounded-2xl px-4 py-3 ${msg.sender === "me"
-                                                    ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white"
-                                                    : "bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-md border border-gray-200 dark:border-gray-700"
+                                                ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white"
+                                                : "bg-white text-gray-800 shadow-md border border-gray-200"
                                                 }`}
                                         >
                                             <p className="text-sm leading-relaxed">{msg.content}</p>
@@ -605,7 +608,7 @@ export default function ServicesMessages() {
                             </div>
 
                             {/* ورودی پیام */}
-                            <div className="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                            <div className="p-4 bg-white border-t border-gray-200">
                                 <div className="flex gap-2">
                                     <Input
                                         placeholder="پیام خود را بنویسید..."
