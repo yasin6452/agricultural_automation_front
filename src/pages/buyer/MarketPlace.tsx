@@ -574,7 +574,7 @@ const MarketPlace = () => {
                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl shadow hover:shadow-lg transition-all hover:scale-105 font-medium"
                                 >
                                     <ShoppingCart size={16} />
-                                    <span>افزودن به سبد</span>
+                                    <span>ارتباط تا تأمین کننده </span>
                                 </button>
 
                                 <Tooltip title={watchlist.includes(product.id) ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}>

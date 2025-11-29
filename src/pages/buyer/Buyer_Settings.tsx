@@ -506,7 +506,7 @@ export default function Settings() {
                                 {privacy[item.key] ? (
                                     <item.icon size={18} className="text-purple-500" />
                                 ) : (
-                                    item.onIcon && <item.onIcon size={18} className="text-gray-400" />
+                                    item.icon && <item.icon size={18} className="text-gray-400" />
                                 )}
                                 <div>
                                     <div className="font-semibold text-gray-800">{item.label}</div>

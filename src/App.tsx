@@ -34,8 +34,8 @@ import Bayer_Messages from "./pages/buyer/Bayer_Messages";
 import Buyer_Settings from "./pages/buyer/Buyer_Settings";
 
 // Services Dashboard
-import ServicesLayout from "./pages/services/ServicesLayout";
-import ServicesDashboard from "./pages/services/ServicesDashboard";
+import ServicesLayout from "./pages/services/ServicesboardLayout";
+import ServicesDashboard from "./pages/services/ServicesOverview";
 import ManageServices from "./pages/services/ManageServices";
 import ServiceRequests from "./pages/services/ServiceRequests";
 import ServicesMessages from "./pages/services/ServicesMessages";
