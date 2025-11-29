@@ -9,10 +9,6 @@ import {
     Package,
     Users,
     Zap,
-    Target,
-    Award,
-    Shield,
-    Truck,
     MessageCircle,
     Phone,
     MapPin,
@@ -360,7 +356,7 @@ const BuyRequestsAI = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-emerald-50 p-6 font-[IRANSans]">
+        <div className="min-h-screen  from-blue-50 via-white to-cyan-50 p-6 font-[IRANSans]">
             <Toaster position="top-right" />
 
             {/* هدر اصلی */}
@@ -368,7 +364,7 @@ const BuyRequestsAI = () => {
                 <div className="flex items-center justify-between mb-6">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg">
                                 <Crown className="text-white" size={24} />
                             </div>
                             سیستم مناقصه معکوس هوشمند
@@ -377,11 +373,11 @@ const BuyRequestsAI = () => {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-green-100">
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-blue-100">
                             <div className="text-xs text-gray-500">کل درخواست‌ها</div>
                             <div className="text-xl font-bold text-gray-800">{stats.total}</div>
                         </div>
-                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-green-100">
+                        <div className="bg-white p-4 rounded-2xl shadow-sm border border-blue-100">
                             <div className="text-xs text-gray-500">پیشنهادات</div>
                             <div className="text-xl font-bold text-blue-600">{stats.totalOffers}</div>
                         </div>
@@ -390,7 +386,7 @@ const BuyRequestsAI = () => {
 
                 {/* آمار پیشرفته */}
                 <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
-                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-green-100">
+                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-blue-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-sm text-gray-500">کل درخواست‌ها</div>
@@ -401,7 +397,7 @@ const BuyRequestsAI = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-green-100">
+                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-blue-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-sm text-gray-500">در حال بررسی</div>
@@ -412,7 +408,7 @@ const BuyRequestsAI = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-green-100">
+                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-blue-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-sm text-gray-500">پذیرفته شده</div>
@@ -423,7 +419,7 @@ const BuyRequestsAI = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-green-100">
+                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-blue-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-sm text-gray-500">تکمیل شده</div>
@@ -434,7 +430,7 @@ const BuyRequestsAI = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-green-100">
+                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-blue-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-sm text-gray-500">بازدید کل</div>
@@ -445,7 +441,7 @@ const BuyRequestsAI = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-green-100">
+                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-blue-100">
                         <div className="flex items-center justify-between">
                             <div>
                                 <div className="text-sm text-gray-500">میانگین پیشنهاد</div>
@@ -462,9 +458,9 @@ const BuyRequestsAI = () => {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {/* سایدبار فرم */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-green-100 sticky top-6">
+                    <div className="bg-white rounded-2xl p-6 shadow-lg border border-blue-100 sticky top-6">
                         <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                            <Sparkles className="text-yellow-500" size={20} />
+                            <Sparkles className="text-blue-500" size={20} />
                             درخواست جدید
                         </h2>
 
@@ -476,7 +472,7 @@ const BuyRequestsAI = () => {
                                     placeholder="مثلاً: سیب قرمز"
                                     value={product}
                                     onChange={e => setProduct(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all"
                                 />
                             </div>
 
@@ -488,7 +484,7 @@ const BuyRequestsAI = () => {
                                         placeholder="100"
                                         value={quantity}
                                         onChange={e => setQuantity(Number(e.target.value))}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all"
                                     />
                                 </div>
                                 <div>
@@ -496,7 +492,7 @@ const BuyRequestsAI = () => {
                                     <select
                                         value={unit}
                                         onChange={e => setUnit(e.target.value)}
-                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all"
+                                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all"
                                     >
                                         <option>کیلوگرم</option>
                                         <option>تن</option>
@@ -511,7 +507,7 @@ const BuyRequestsAI = () => {
                                 <select
                                     value={category}
                                     onChange={e => setCategory(e.target.value)}
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all"
                                 >
                                     <option>میوه</option>
                                     <option>سبزیجات</option>
@@ -528,7 +524,7 @@ const BuyRequestsAI = () => {
                                     placeholder="1000000"
                                     value={budget}
                                     onChange={e => setBudget(Number(e.target.value))}
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all"
                                 />
                             </div>
 
@@ -537,7 +533,7 @@ const BuyRequestsAI = () => {
                                 <select
                                     value={urgency}
                                     onChange={e => setUrgency(e.target.value as any)}
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all"
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all"
                                 >
                                     <option value="low">کم</option>
                                     <option value="medium">متوسط</option>
@@ -552,13 +548,13 @@ const BuyRequestsAI = () => {
                                     value={description}
                                     onChange={e => setDescription(e.target.value)}
                                     rows={3}
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-300 focus:border-green-300 transition-all resize-none"
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-300 transition-all resize-none"
                                 />
                             </div>
 
                             <button
                                 onClick={addRequest}
-                                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 font-bold"
+                                className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 font-bold"
                             >
                                 <Zap size={20} />
                                 ثبت درخواست هوشمند
@@ -570,7 +566,7 @@ const BuyRequestsAI = () => {
                 {/* محتوای اصلی */}
                 <div className="lg:col-span-3">
                     {/* تب‌های فیلتر */}
-                    <div className="bg-white rounded-2xl p-4 shadow-lg border border-green-100 mb-6">
+                    <div className="bg-white rounded-2xl p-4 shadow-lg border border-blue-100 mb-6">
                         <div className="flex flex-wrap gap-2">
                             {[
                                 { key: 'all', label: 'همه', count: stats.total },
@@ -582,12 +578,12 @@ const BuyRequestsAI = () => {
                                     key={tab.key}
                                     onClick={() => setActiveTab(tab.key as any)}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all ${activeTab === tab.key
-                                            ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-lg'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
                                     <span>{tab.label}</span>
-                                    <Badge count={tab.count} className={activeTab === tab.key ? 'bg-white text-green-600' : 'bg-green-500'} />
+                                    <Badge count={tab.count} className={activeTab === tab.key ? 'bg-white text-blue-600' : 'bg-blue-500'} />
                                 </button>
                             ))}
                         </div>
@@ -596,7 +592,7 @@ const BuyRequestsAI = () => {
                     {/* لیست درخواست‌ها */}
                     <div className="space-y-6">
                         {filteredRequests.map(request => (
-                            <div key={request.id} className="bg-white rounded-2xl shadow-lg border border-green-100 overflow-hidden">
+                            <div key={request.id} className="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
                                 {/* هدر درخواست */}
                                 <div className="p-6 border-b border-gray-100">
                                     <div className="flex items-start gap-4 mb-4">
@@ -658,10 +654,10 @@ const BuyRequestsAI = () => {
                                             <div
                                                 key={offer.id}
                                                 className={`border-2 rounded-2xl p-4 transition-all ${offer.accepted
-                                                        ? 'border-green-300 bg-green-50'
-                                                        : offer.aiSuggested
-                                                            ? 'border-yellow-300 bg-gradient-to-r from-yellow-50 to-orange-50'
-                                                            : 'border-gray-200 hover:border-green-200 hover:bg-green-50'
+                                                    ? 'border-green-300 bg-green-50'
+                                                    : offer.aiSuggested
+                                                        ? 'border-yellow-300 bg-gradient-to-r from-yellow-50 to-orange-50'
+                                                        : 'border-gray-200 hover:border-blue-200 hover:bg-blue-50'
                                                     }`}
                                             >
                                                 <div className="flex items-start justify-between mb-3">
@@ -775,7 +771,7 @@ const BuyRequestsAI = () => {
                                                         {request.status === 'Pending' && !offer.accepted && (
                                                             <button
                                                                 onClick={() => acceptOffer(request.id, offer.id)}
-                                                                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:shadow-lg transition-all font-bold"
+                                                                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl hover:shadow-lg transition-all font-bold"
                                                             >
                                                                 <CheckCircle size={18} />
                                                                 پذیرش پیشنهاد
@@ -798,7 +794,7 @@ const BuyRequestsAI = () => {
                                         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-200">
                                             <button
                                                 onClick={() => completeRequest(request.id)}
-                                                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:shadow-lg transition-all"
+                                                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl hover:shadow-lg transition-all"
                                             >
                                                 <Package size={18} />
                                                 تکمیل سفارش

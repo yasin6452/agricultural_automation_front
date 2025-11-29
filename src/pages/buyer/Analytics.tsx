@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Star, TrendingUp, TrendingDown, DollarSign, ShoppingCart,  Users, BarChart3, Target, PieChart, Download, Sparkles, Award, Crown, Lightbulb, Clock } from "lucide-react";
-import { Card, Badge, Progress, Select, DatePicker, Avatar, Rate, Row, Col } from "antd";
+import { Star, TrendingUp, TrendingDown, DollarSign, ShoppingCart, Users, BarChart3, Target, PieChart, Download, Sparkles, Award, Crown, Lightbulb, Clock, Zap, Activity, Package, Truck } from "lucide-react";
+import { Card, Badge, Progress, Select, DatePicker, Avatar, Rate, Row, Col, Tooltip } from "antd";
 import { Line, Bar, Pie } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -48,6 +48,7 @@ interface ProductPerformance {
     revenue: number;
     growth: number;
     image: string;
+    category: string;
 }
 
 interface SupplierAnalytics {
@@ -56,14 +57,17 @@ interface SupplierAnalytics {
     orders: number;
     totalSpent: number;
     deliveryScore: number;
+    responseTime: string;
+    successRate: number;
 }
 
 const Analytics: React.FC = () => {
     const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
     const [timeRange, setTimeRange] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
-    const [ setSelectedPeriod] = useState<any>(null);
+    const [setSelectedPeriod] = useState<any>(null);
     const [topProducts, setTopProducts] = useState<ProductPerformance[]>([]);
     const [supplierAnalytics, setSupplierAnalytics] = useState<SupplierAnalytics[]>([]);
+    const [loading, setLoading] = useState(true);
 
     // داده‌های نمونه پیشرفته
     const sampleData: AnalyticsData[] = [
@@ -76,31 +80,34 @@ const Analytics: React.FC = () => {
     ];
 
     const sampleProducts: ProductPerformance[] = [
-        { name: "سیب قرمز", sales: 450, revenue: 5400000, growth: 25, image: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=100&h=100&fit=crop" },
-        { name: "برنج محلی", sales: 320, revenue: 8000000, growth: 18, image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=100&h=100&fit=crop" },
-        { name: "گوجه فرنگی", sales: 580, revenue: 2900000, growth: 32, image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop" },
-        { name: "هویج تازه", sales: 390, revenue: 1950000, growth: 15, image: "https://images.unsplash.com/photo-1445282768818-728615cc910a?w=100&h=100&fit=crop" },
-        { name: "پرتقال شمال", sales: 420, revenue: 4620000, growth: 28, image: "https://images.unsplash.com/photo-1547514701-42782101795e?w=100&h=100&fit=crop" },
+        { name: "سیب قرمز", sales: 450, revenue: 5400000, growth: 25, image: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=100&h=100&fit=crop", category: "میوه" },
+        { name: "برنج محلی", sales: 320, revenue: 8000000, growth: 18, image: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=100&h=100&fit=crop", category: "غلات" },
+        { name: "گوجه فرنگی", sales: 580, revenue: 2900000, growth: 32, image: "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=100&h=100&fit=crop", category: "سبزیجات" },
+        { name: "هویج تازه", sales: 390, revenue: 1950000, growth: 15, image: "https://images.unsplash.com/photo-1445282768818-728615cc910a?w=100&h=100&fit=crop", category: "سبزیجات" },
+        { name: "پرتقال شمال", sales: 420, revenue: 4620000, growth: 28, image: "https://images.unsplash.com/photo-1547514701-42782101795e?w=100&h=100&fit=crop", category: "میوه" },
     ];
 
     const sampleSuppliers: SupplierAnalytics[] = [
-        { name: "مزرعه سبز", rating: 4.8, orders: 45, totalSpent: 5400000, deliveryScore: 95 },
-        { name: "کشاورز نمونه", rating: 4.6, orders: 38, totalSpent: 4560000, deliveryScore: 88 },
-        { name: "باغ مرکبات", rating: 4.9, orders: 52, totalSpent: 6240000, deliveryScore: 92 },
-        { name: "شالیزار شمال", rating: 4.7, orders: 41, totalSpent: 4920000, deliveryScore: 90 },
+        { name: "مزرعه سبز", rating: 4.8, orders: 45, totalSpent: 5400000, deliveryScore: 95, responseTime: "کمتر از 1 ساعت", successRate: 98 },
+        { name: "کشاورز نمونه", rating: 4.6, orders: 38, totalSpent: 4560000, deliveryScore: 88, responseTime: "2 ساعت", successRate: 92 },
+        { name: "باغ مرکبات", rating: 4.9, orders: 52, totalSpent: 6240000, deliveryScore: 92, responseTime: "1 ساعت", successRate: 96 },
+        { name: "شالیزار شمال", rating: 4.7, orders: 41, totalSpent: 4920000, deliveryScore: 90, responseTime: "3 ساعت", successRate: 89 },
     ];
 
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setLoading(true);
                 // شبیه‌سازی دریافت داده از API
                 setTimeout(() => {
                     setAnalytics(sampleData);
                     setTopProducts(sampleProducts);
                     setSupplierAnalytics(sampleSuppliers);
-                }, 1000);
+                    setLoading(false);
+                }, 1500);
             } catch (err) {
                 console.error("Error fetching analytics data:", err);
+                setLoading(false);
             }
         };
 
@@ -178,6 +185,7 @@ const Analytics: React.FC = () => {
     const totalCost = analytics.reduce((sum, item) => sum + item.cost, 0);
     const totalProfit = analytics.reduce((sum, item) => sum + item.profit, 0);
     const totalOrders = analytics.reduce((sum, item) => sum + item.orders, 0);
+    const totalCustomers = analytics.reduce((sum, item) => sum + item.customers, 0);
     const avgGrowth = analytics.length > 0 ? analytics.reduce((sum, item) => sum + item.growth, 0) / analytics.length : 0;
 
     const chartOptions = {
@@ -222,7 +230,7 @@ const Analytics: React.FC = () => {
     };
 
     const handleDateChange = (dates: any, dateStrings: [string, string]) => {
-        setSelectedPeriod(dates);
+        // setSelectedPeriod(dates);
     };
 
     const handleExport = () => {
@@ -231,14 +239,28 @@ const Analytics: React.FC = () => {
         // در اینجا می‌توانید منطق واقعی برای خروجی گرفتن پیاده‌سازی کنید
     };
 
+    const getPerformanceColor = (value: number) => {
+        if (value >= 90) return 'text-green-500';
+        if (value >= 80) return 'text-blue-500';
+        if (value >= 70) return 'text-yellow-500';
+        return 'text-red-500';
+    };
+
+    const getPerformanceBg = (value: number) => {
+        if (value >= 90) return 'bg-green-100';
+        if (value >= 80) return 'bg-blue-100';
+        if (value >= 70) return 'bg-yellow-100';
+        return 'bg-red-100';
+    };
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-6 font-[IRANSans]">
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6 font-[IRANSans]">
             {/* هدر */}
             <div className="mb-8">
                 <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 gap-4">
                     <div>
                         <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 flex items-center gap-3">
-                            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <div className="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl flex items-center justify-center shadow-lg">
                                 <BarChart3 className="text-white" size={20} />
                             </div>
                             داشبورد هوشمند تحلیل‌ها
@@ -264,7 +286,7 @@ const Analytics: React.FC = () => {
                         />
                         <button
                             onClick={handleExport}
-                            className="flex items-center gap-2 px-4 py-2 bg-white border border-green-300 rounded-xl hover:shadow-lg transition-all w-full sm:w-auto justify-center"
+                            className="flex items-center gap-2 px-4 py-2 bg-white border border-blue-300 rounded-xl hover:shadow-lg transition-all w-full sm:w-auto justify-center hover:bg-blue-50"
                         >
                             <Download size={18} />
                             خروجی
@@ -274,51 +296,51 @@ const Analytics: React.FC = () => {
 
                 {/* کارت‌های آماری */}
                 <Row gutter={[16, 16]} className="mb-6">
-                    <Col xs={24} sm={12} lg={6}>
-                        <Card className="shadow-lg border-0 h-full">
+                    <Col xs={24} sm={12} lg={4}>
+                        <Card className="shadow-lg border-0 border-l-4 border-l-blue-500 hover:shadow-xl transition-all h-full">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="text-sm text-gray-500">کل درآمد</div>
-                                    <div className="text-xl font-bold text-green-600">{(totalRevenue / 1000000).toFixed(1)}M</div>
+                                    <div className="text-xl font-bold text-blue-600">{(totalRevenue / 1000000).toFixed(1)}M</div>
                                     <div className="text-xs text-green-500 flex items-center gap-1 mt-1">
                                         <TrendingUp size={12} />
                                         {avgGrowth.toFixed(1)}% رشد
                                     </div>
                                 </div>
-                                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                                    <DollarSign className="text-green-600" size={24} />
+                                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                                    <DollarSign className="text-blue-600" size={24} />
                                 </div>
                             </div>
                         </Card>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={6}>
-                        <Card className="shadow-lg border-0 h-full">
+                    <Col xs={24} sm={12} lg={4}>
+                        <Card className="shadow-lg border-0 border-l-4 border-l-green-500 hover:shadow-xl transition-all h-full">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="text-sm text-gray-500">کل سود</div>
-                                    <div className="text-xl font-bold text-blue-600">{(totalProfit / 1000000).toFixed(1)}M</div>
-                                    <div className="text-xs text-blue-500 flex items-center gap-1 mt-1">
+                                    <div className="text-xl font-bold text-green-600">{(totalProfit / 1000000).toFixed(1)}M</div>
+                                    <div className="text-xs text-green-500 flex items-center gap-1 mt-1">
                                         <TrendingUp size={12} />
                                         {(totalProfit / totalRevenue * 100).toFixed(1)}% حاشیه
                                     </div>
                                 </div>
-                                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-                                    <Target className="text-blue-600" size={24} />
+                                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                                    <Target className="text-green-600" size={24} />
                                 </div>
                             </div>
                         </Card>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={6}>
-                        <Card className="shadow-lg border-0 h-full">
+                    <Col xs={24} sm={12} lg={4}>
+                        <Card className="shadow-lg border-0 border-l-4 border-l-purple-500 hover:shadow-xl transition-all h-full">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="text-sm text-gray-500">سفارشات</div>
                                     <div className="text-xl font-bold text-purple-600">{totalOrders}</div>
                                     <div className="text-xs text-purple-500 flex items-center gap-1 mt-1">
                                         <Users size={12} />
-                                        {analytics[analytics.length - 1]?.customers || 0} مشتری فعال
+                                        {totalCustomers} مشتری
                                     </div>
                                 </div>
                                 <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
@@ -328,8 +350,8 @@ const Analytics: React.FC = () => {
                         </Card>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={6}>
-                        <Card className="shadow-lg border-0 h-full">
+                    <Col xs={24} sm={12} lg={4}>
+                        <Card className="shadow-lg border-0 border-l-4 border-l-orange-500 hover:shadow-xl transition-all h-full">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <div className="text-sm text-gray-500">کارایی</div>
@@ -349,6 +371,46 @@ const Analytics: React.FC = () => {
                             </div>
                         </Card>
                     </Col>
+
+                    <Col xs={24} sm={12} lg={4}>
+                        <Card className="shadow-lg border-0 border-l-4 border-l-cyan-500 hover:shadow-xl transition-all h-full">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-sm text-gray-500">محصولات</div>
+                                    <div className="text-xl font-bold text-cyan-600">
+                                        {analytics[analytics.length - 1]?.products || 0}
+                                    </div>
+                                    <div className="text-xs text-cyan-500 flex items-center gap-1 mt-1">
+                                        <Package size={12} />
+                                        فعال
+                                    </div>
+                                </div>
+                                <div className="w-12 h-12 bg-cyan-100 rounded-xl flex items-center justify-center">
+                                    <Package className="text-cyan-600" size={24} />
+                                </div>
+                            </div>
+                        </Card>
+                    </Col>
+
+                    <Col xs={24} sm={12} lg={4}>
+                        <Card className="shadow-lg border-0 border-l-4 border-l-red-500 hover:shadow-xl transition-all h-full">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <div className="text-sm text-gray-500">تحویل</div>
+                                    <div className="text-xl font-bold text-red-600">
+                                        {Math.round(supplierAnalytics.reduce((sum, s) => sum + s.deliveryScore, 0) / supplierAnalytics.length)}%
+                                    </div>
+                                    <div className="text-xs text-red-500 flex items-center gap-1 mt-1">
+                                        <Truck size={12} />
+                                        میانگین
+                                    </div>
+                                </div>
+                                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                                    <Truck className="text-red-600" size={24} />
+                                </div>
+                            </div>
+                        </Card>
+                    </Col>
                 </Row>
             </div>
 
@@ -358,8 +420,8 @@ const Analytics: React.FC = () => {
                     <Card
                         title={
                             <div className="flex items-center gap-2">
-                                <TrendingUp className="text-green-500" size={20} />
-                                <span>روند مالی</span>
+                                <TrendingUp className="text-blue-500" size={20} />
+                                <span className="font-bold">روند مالی</span>
                             </div>
                         }
                         extra={<Badge count="زنده" style={{ backgroundColor: '#52c41a' }} />}
@@ -375,8 +437,8 @@ const Analytics: React.FC = () => {
                     <Card
                         title={
                             <div className="flex items-center gap-2">
-                                <Users className="text-blue-500" size={20} />
-                                <span>آمار سفارشات و مشتریان</span>
+                                <Users className="text-purple-500" size={20} />
+                                <span className="font-bold">آمار سفارشات و مشتریان</span>
                             </div>
                         }
                         className="shadow-lg border-0 h-full"
@@ -394,8 +456,8 @@ const Analytics: React.FC = () => {
                     <Card
                         title={
                             <div className="flex items-center gap-2">
-                                <PieChart className="text-purple-500" size={20} />
-                                <span>توزیع درآمد محصولات</span>
+                                <PieChart className="text-green-500" size={20} />
+                                <span className="font-bold">توزیع درآمد محصولات</span>
                             </div>
                         }
                         className="shadow-lg border-0 h-full"
@@ -411,28 +473,33 @@ const Analytics: React.FC = () => {
                         title={
                             <div className="flex items-center gap-2">
                                 <Crown className="text-yellow-500" size={20} />
-                                <span>محصولات برتر</span>
+                                <span className="font-bold">محصولات برتر</span>
                             </div>
                         }
                         className="shadow-lg border-0 h-full"
                     >
                         <div className="space-y-3 max-h-64 overflow-y-auto">
                             {topProducts.map((product, index) => (
-                                <div key={product.name} className="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-green-50 transition-all">
+                                <div key={product.name} className="flex items-center justify-between p-3 border border-gray-100 rounded-xl hover:bg-blue-50 transition-all group">
                                     <div className="flex items-center gap-3">
                                         <div className="relative">
                                             <img
                                                 src={product.image}
                                                 alt={product.name}
-                                                className="w-10 h-10 rounded-lg object-cover"
+                                                className="w-10 h-10 rounded-lg object-cover shadow-md"
                                             />
-                                            <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-500 text-white rounded-full text-xs flex items-center justify-center">
+                                            <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-full text-xs flex items-center justify-center font-bold">
                                                 {index + 1}
                                             </div>
                                         </div>
                                         <div>
                                             <div className="font-semibold text-gray-800 text-sm">{product.name}</div>
-                                            <div className="text-xs text-gray-500">{product.sales} فروش</div>
+                                            <div className="text-xs text-gray-500 flex items-center gap-1">
+                                                <Badge color="blue" size="small" className="text-xs">
+                                                    {product.category}
+                                                </Badge>
+                                                <span>{product.sales} فروش</span>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="text-right">
@@ -452,55 +519,80 @@ const Analytics: React.FC = () => {
                     <Card
                         title={
                             <div className="flex items-center gap-2">
-                                <Sparkles className="text-blue-500" size={20} />
-                                <span>تأمین‌کنندگان برتر</span>
+                                <Sparkles className="text-cyan-500" size={20} />
+                                <span className="font-bold">تأمین‌کنندگان برتر</span>
                             </div>
                         }
                         className="shadow-lg border-0 h-full"
                     >
                         <div className="space-y-3 max-h-64 overflow-y-auto">
                             {supplierAnalytics.map((supplier, index) => (
-                                <div key={supplier.name} className="p-3 border border-gray-100 rounded-xl hover:bg-blue-50 transition-all">
+                                <div key={supplier.name} className="p-3 border border-gray-100 rounded-xl hover:bg-cyan-50 transition-all group">
                                     <div className="flex items-center justify-between mb-2">
                                         <div className="flex items-center gap-2">
                                             <Avatar
                                                 size="small"
-                                                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold"
+                                                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold shadow-md"
                                             >
                                                 {supplier.name.charAt(0)}
                                             </Avatar>
                                             <div>
                                                 <div className="font-semibold text-gray-800 text-sm">{supplier.name}</div>
-                                                <Rate
-                                                    disabled
-                                                    defaultValue={supplier.rating}
-                                                    className="text-yellow-500 text-xs"
-                                                    character={<Star size={10} />}
-                                                />
+                                                <div className="flex items-center gap-1">
+                                                    <Rate
+                                                        disabled
+                                                        defaultValue={supplier.rating}
+                                                        className="text-yellow-500 text-xs"
+                                                        character={<Star size={10} />}
+                                                    />
+                                                    <span className="text-xs text-gray-500">{supplier.rating}</span>
+                                                </div>
                                             </div>
                                         </div>
                                         <Badge count={index + 1} style={{ backgroundColor: '#faad14' }} />
                                     </div>
                                     <Row gutter={8} className="text-center">
-                                        <Col span={8}>
-                                            <div className="text-xs text-gray-500">سفارشات</div>
-                                            <div className="font-bold text-purple-600 text-sm">{supplier.orders}</div>
+                                        <Col span={6}>
+                                            <Tooltip title="تعداد سفارشات">
+                                                <div>
+                                                    <div className="text-xs text-gray-500">سفارشات</div>
+                                                    <div className="font-bold text-purple-600 text-sm">{supplier.orders}</div>
+                                                </div>
+                                            </Tooltip>
                                         </Col>
-                                        <Col span={8}>
-                                            <div className="text-xs text-gray-500">هزینه</div>
-                                            <div className="font-bold text-green-600 text-sm">{(supplier.totalSpent / 1000000).toFixed(1)}M</div>
+                                        <Col span={6}>
+                                            <Tooltip title="کل هزینه">
+                                                <div>
+                                                    <div className="text-xs text-gray-500">هزینه</div>
+                                                    <div className="font-bold text-green-600 text-sm">{(supplier.totalSpent / 1000000).toFixed(1)}M</div>
+                                                </div>
+                                            </Tooltip>
                                         </Col>
-                                        <Col span={8}>
-                                            <div className="text-xs text-gray-500">تحویل</div>
-                                            <Progress
-                                                percent={supplier.deliveryScore}
-                                                size="small"
-                                                strokeColor={
-                                                    supplier.deliveryScore > 90 ? '#52c41a' :
-                                                        supplier.deliveryScore > 80 ? '#1890ff' : '#faad14'
-                                                }
-                                                format={percent => `${percent}%`}
-                                            />
+                                        <Col span={6}>
+                                            <Tooltip title="امتیاز تحویل">
+                                                <div>
+                                                    <div className="text-xs text-gray-500">تحویل</div>
+                                                    <Progress
+                                                        percent={supplier.deliveryScore}
+                                                        size="small"
+                                                        strokeColor={
+                                                            supplier.deliveryScore > 90 ? '#52c41a' :
+                                                                supplier.deliveryScore > 80 ? '#1890ff' : '#faad14'
+                                                        }
+                                                        format={percent => `${percent}%`}
+                                                    />
+                                                </div>
+                                            </Tooltip>
+                                        </Col>
+                                        <Col span={6}>
+                                            <Tooltip title="میزان موفقیت">
+                                                <div>
+                                                    <div className="text-xs text-gray-500">موفقیت</div>
+                                                    <div className={`font-bold text-sm ${getPerformanceColor(supplier.successRate)}`}>
+                                                        {supplier.successRate}%
+                                                    </div>
+                                                </div>
+                                            </Tooltip>
                                         </Col>
                                     </Row>
                                 </div>
@@ -515,43 +607,55 @@ const Analytics: React.FC = () => {
                 title={
                     <div className="flex items-center gap-2">
                         <Lightbulb className="text-yellow-500" size={20} />
-                        <span>پیشنهادات هوشمند</span>
+                        <span className="font-bold">پیشنهادات هوشمند</span>
                     </div>
                 }
                 className="shadow-lg border-0"
             >
                 <Row gutter={[16, 16]}>
                     <Col xs={24} md={8}>
-                        <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-100 rounded-xl border border-green-200 h-full">
+                        <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-100 rounded-xl border border-blue-200 h-full hover:shadow-md transition-all">
                             <div className="flex items-center gap-3 mb-2">
-                                <Target className="text-green-600" size={20} />
-                                <span className="font-semibold text-green-800">بهینه‌سازی هزینه</span>
+                                <Target className="text-blue-600" size={20} />
+                                <span className="font-semibold text-blue-800">بهینه‌سازی هزینه</span>
                             </div>
-                            <p className="text-sm text-green-700">
-                                کاهش ۱۵٪ هزینه‌های خرید از تأمین‌کنندگان با امتیاز پایین
+                            <p className="text-sm text-blue-700 leading-relaxed">
+                                کاهش ۱۵٪ هزینه‌های خرید از تأمین‌کنندگان با امتیاز پایین و افزایش تمرکز بر تأمین‌کنندگان با نرخ موفقیت بالا
                             </p>
+                            <div className="flex items-center gap-2 mt-3">
+                                <Zap size={14} className="text-blue-500" />
+                                <span className="text-xs text-blue-600 font-medium">پتانسیل صرفه‌جویی: {(totalCost * 0.15 / 1000000).toFixed(1)} میلیون تومان</span>
+                            </div>
                         </div>
                     </Col>
                     <Col xs={24} md={8}>
-                        <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-100 rounded-xl border border-blue-200 h-full">
+                        <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-100 rounded-xl border border-green-200 h-full hover:shadow-md transition-all">
                             <div className="flex items-center gap-3 mb-2">
-                                <TrendingUp className="text-blue-600" size={20} />
-                                <span className="font-semibold text-blue-800">افزایش فروش</span>
+                                <TrendingUp className="text-green-600" size={20} />
+                                <span className="font-semibold text-green-800">افزایش فروش</span>
                             </div>
-                            <p className="text-sm text-blue-700">
-                                تمرکز بر محصولات پرفروش برای افزایش ۲۵٪ درآمد
+                            <p className="text-sm text-green-700 leading-relaxed">
+                                تمرکز بر محصولات پرفروش برای افزایش ۲۵٪ درآمد و توسعه بازار محصولات با رشد بالا
                             </p>
+                            <div className="flex items-center gap-2 mt-3">
+                                <Activity size={14} className="text-green-500" />
+                                <span className="text-xs text-green-600 font-medium">پتانسیل رشد: {(totalRevenue * 0.25 / 1000000).toFixed(1)} میلیون تومان</span>
+                            </div>
                         </div>
                     </Col>
                     <Col xs={24} md={8}>
-                        <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-100 rounded-xl border border-purple-200 h-full">
+                        <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-100 rounded-xl border border-purple-200 h-full hover:shadow-md transition-all">
                             <div className="flex items-center gap-3 mb-2">
                                 <Clock className="text-purple-600" size={20} />
                                 <span className="font-semibold text-purple-800">مدیریت زمان</span>
                             </div>
-                            <p className="text-sm text-purple-700">
-                                بهبود زنجیره تأمین برای کاهش ۳۰٪ زمان تحویل
+                            <p className="text-sm text-purple-700 leading-relaxed">
+                                بهبود زنجیره تأمین برای کاهش ۳۰٪ زمان تحویل و افزایش رضایت مشتریان با تحویل سریع‌تر
                             </p>
+                            <div className="flex items-center gap-2 mt-3">
+                                <Sparkles size={14} className="text-purple-500" />
+                                <span className="text-xs text-purple-600 font-medium">رضایت مشتری: +۲۰٪</span>
+                            </div>
                         </div>
                     </Col>
                 </Row>

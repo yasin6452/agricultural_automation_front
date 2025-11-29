@@ -15,7 +15,6 @@ import {
     Sun,
     Package,
     TrendingUp,
-    Heart,
     Users,
     FileText,
 } from "lucide-react";
@@ -58,12 +57,6 @@ const menuItems = [
         label: "سفارشات من",
         icon: <Package size={20} />,
         color: "#ec4899"
-    },
-    {
-        key: "/buyer/dashboard/saved",
-        label: "علاقه‌مندی‌ها",
-        icon: <Heart size={20} />,
-        color: "#ef4444"
     },
     {
         key: "/buyer/dashboard/bayerMessages",

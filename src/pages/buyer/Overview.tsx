@@ -1,22 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
     TrendingUp,
     TrendingDown,
-    DollarSign,
     ShoppingCart,
     Package,
     Users,
     BarChart3,
     Target,
-    Calendar,
     Star,
-    MapPin,
     Clock,
     CheckCircle,
     XCircle,
     AlertCircle
 } from "lucide-react";
-import { Card, Statistic, Progress, Tag, Table, Badge, Row, Col, List, Avatar } from "antd";
+import { Card, Progress, Tag, Table, Badge, Row, Col, List } from "antd";
 
 interface Order {
     id: string;
@@ -163,7 +160,7 @@ export default function Overview() {
     const successRate = (completedOrders / orders.length) * 100;
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 font-[IRANSans]">
+        <div className="min-h-screen  from-gray-50 to-gray-100 p-6 font-[IRANSans]">
             {/* هدر */}
             <div className="mb-8">
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-6 gap-4">
@@ -252,7 +249,7 @@ export default function Overview() {
                         >
                             <List
                                 dataSource={topProducts}
-                                renderItem={(product, index) => (
+                                renderItem={(product) => (
                                     <List.Item className="border-0 px-0 py-3">
                                         <div className="flex items-center justify-between w-full">
                                             <div className="flex items-center gap-3">

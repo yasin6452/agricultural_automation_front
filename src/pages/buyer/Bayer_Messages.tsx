@@ -203,7 +203,7 @@ export default function Messages() {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+        <div className="min-h-screen from-gray-50 to-gray-100 p-6">
             {/* Header */}
             <div className="mb-6 animate-fadeIn">
                 <div className="flex justify-between items-center mb-4">
